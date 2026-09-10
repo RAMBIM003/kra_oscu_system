@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Profiles - KRA eTIMS</title>
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/chatbot/chatbot.css">
+</head>
+
+<body>
+
+<section
+    id="profile-screen"
+    class="page-screen"
+>
+
+    <header class="selection-header">
+
+        <div class="user-menu">
+
+            <button
+                type="button"
+                id="user-menu-toggle"
+                class="user-menu-trigger"
+            >
+
+                <div class="user-avatar" id="user-avatar-letter">
+                    <i class="ph ph-user"></i>
+                </div>
+
+                <div class="user-info">
+                    <span>Signed in as</span>
+                    <strong id="profile-user-email">—</strong>
+                </div>
+
+                <i class="ph ph-caret-down user-menu-caret"></i>
+
+            </button>
+
+            <div id="user-dropdown" class="user-dropdown hidden">
+
+                <button
+                    id="profile-logout"
+                    class="user-dropdown-item"
+                    title="Sign out"
+                    type="button"
+                >
+                    <i class="ph ph-sign-out"></i>
+                    Sign out
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main class="selection-main">
+
+        <div class="selection-heading">
+
+            <div>
+
+                <span class="eyebrow">
+                    ACCOUNT
+                </span>
+
+                <h1>
+                    Select a profile
+                </h1>
+
+                <p>
+                    Choose a profile to continue managing
+                    your businesses and tax operations.
+                </p>
+
+            </div>
+
+            <button
+                id="open-create-profile"
+                class="btn btn-primary"
+            >
+                <i class="ph ph-plus"></i>
+                Create Profile
+            </button>
+
+        </div>
+
+        <div
+            id="profiles-list"
+            class="cards-grid"
+        ></div>
+
+    </main>
+
+</section>
+
+
+<div
+    id="profile-modal"
+    class="modal hidden"
+>
+
+    <div class="modal-dialog">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    PROFILE
+                </span>
+
+                <h2>
+                    Create profile
+                </h2>
+
+            </div>
+
+            <button
+                class="close-modal icon-btn"
+                data-modal="profile-modal"
+                type="button"
+            >
+                <i class="ph ph-x"></i>
+            </button>
+
+        </div>
+
+
+        <form id="profile-form">
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label for="profile-name">
+                        Profile name
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="ph ph-user-circle input-icon"></i>
+
+                        <input
+                            type="text"
+                            id="profile-name"
+                            placeholder="e.g. My Business Profile"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="profile-type">
+                        Profile type
+                    </label>
+
+                    <div class="select-wrapper">
+
+                        <i class="ph ph-identification-card"></i>
+
+                        <select
+                            id="profile-type"
+                            required
+                        >
+
+                            <option value="">
+                                Select profile type
+                            </option>
+
+                            <option value="business">
+                                Business
+                            </option>
+
+                            <option value="individual">
+                                Individual
+                            </option>
+
+                            <option value="partner">
+                                Partner
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="profile-location">
+                        Location
+                    </label>
+
+                    <div class="select-wrapper">
+
+                        <i class="ph ph-map-pin"></i>
+
+                        <select
+                            id="profile-location"
+                            required
+                        >
+
+                            <option value="">
+                                Select location
+                            </option>
+
+                            <option value="nairobi">
+                                Nairobi
+                            </option>
+
+                            <option value="mombasa">
+                                Mombasa
+                            </option>
+
+                            <option value="kisumu">
+                                Kisumu
+                            </option>
+
+                            <option value="other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary close-modal"
+                    data-modal="profile-modal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    <i class="ph ph-floppy-disk"></i>
+                    Save Profile
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- eTIMS chatbot widget -->
+<button
+    id="etims-chatbot-trigger"
+    class="etims-chatbot-trigger"
+    type="button"
+    aria-label="Open help chat"
+>
+    <i class="ph ph-chat-circle-dots"></i>
+</button>
+
+<div
+    id="etims-chatbot-panel"
+    class="etims-chatbot-panel hidden"
+>
+
+    <div class="etims-chatbot-header">
+
+        <div class="etims-chatbot-brand">
+            <div class="etims-chatbot-brand-mark">
+                <i class="ph ph-chat-circle-dots"></i>
+            </div>
+            <strong>eTIMS Help</strong>
+        </div>
+
+        <button
+            id="etims-chatbot-close"
+            class="etims-chatbot-icon-btn"
+            type="button"
+            aria-label="Close help chat"
+        >
+            <i class="ph ph-x"></i>
+        </button>
+
+    </div>
+
+    <div class="etims-chatbot-body">
+
+        <div
+            id="etims-chatbot-tab-home"
+            class="etims-chatbot-tab-panel"
+        >
+
+            <h2 class="etims-chatbot-greeting">
+                Hi there
+                <span class="etims-chatbot-wave">👋</span>
+                <br>
+                How can we help?
+            </h2>
+
+            <button class="etims-chatbot-contact-btn" type="button">
+                Contact us
+                <i class="ph ph-arrow-right"></i>
+            </button>
+
+            <div class="etims-chatbot-links">
+
+                <a
+                    href="#"
+                    class="etims-chatbot-link etims-chatbot-link-accent"
+                >
+                    eTIMS API docs
+                    <i class="ph ph-arrow-square-out"></i>
+                </a>
+
+                <a
+                    href="#"
+                    class="etims-chatbot-link"
+                >
+                    eTIMS website
+                    <i class="ph ph-arrow-square-out"></i>
+                </a>
+
+                <a
+                    href="#"
+                    class="etims-chatbot-link"
+                >
+                    Support centre
+                    <i class="ph ph-arrow-square-out"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="etims-chatbot-tab-messages"
+            class="etims-chatbot-tab-panel hidden"
+        >
+
+            <div class="etims-chatbot-empty">
+                <i class="ph ph-envelope-simple"></i>
+                <strong>No messages yet</strong>
+                <span>Start a conversation and we will reply here.</span>
+            </div>
+
+        </div>
+
+
+        <div
+            id="etims-chatbot-tab-help"
+            class="etims-chatbot-tab-panel hidden"
+        >
+
+            <div class="etims-chatbot-search">
+                <i class="ph ph-magnifying-glass"></i>
+                <input
+                    id="etims-chatbot-search-input"
+                    type="text"
+                    placeholder="Search for help"
+                >
+            </div>
+
+            <div class="etims-chatbot-articles">
+
+                <a href="#" class="etims-chatbot-article">
+                    Set up a profile and business
+                    <i class="ph ph-caret-right"></i>
+                </a>
+
+                <a href="#" class="etims-chatbot-article">
+                    Introduction to the eTIMS dashboard
+                    <i class="ph ph-caret-right"></i>
+                </a>
+
+                <a href="#" class="etims-chatbot-article">
+                    Connecting a business to KRA
+                    <i class="ph ph-caret-right"></i>
+                </a>
+
+                <a href="#" class="etims-chatbot-article">
+                    Contact support
+                    <i class="ph ph-caret-right"></i>
+                </a>
+
+            </div>
+
+            <div class="etims-chatbot-ticket">
+                <strong>Create a ticket</strong>
+                <button class="etims-chatbot-ticket-btn" type="button">
+                    General support
+                    <i class="ph ph-ticket"></i>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="etims-chatbot-tabbar">
+
+        <button
+            class="etims-chatbot-tab active"
+            data-tab="home"
+            type="button"
+        >
+            <i class="ph ph-house"></i>
+            Home
+        </button>
+
+        <button
+            class="etims-chatbot-tab"
+            data-tab="messages"
+            type="button"
+        >
+            <i class="ph ph-chat-text"></i>
+            Messages
+        </button>
+
+        <button
+            class="etims-chatbot-tab"
+            data-tab="help"
+            type="button"
+        >
+            <i class="ph ph-question"></i>
+            Help
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="/js/auth.js"></script>
+<script src="/js/profiles.js"></script>
+<script src="/js/business.js"></script>
+<script src="/js/dashboard.js"></script>
+<script src="/js/items.js"></script>
+<script src="/js/purchases.js"></script>
+<script src="/js/sales.js"></script>
+<script src="/js/app.js"></script>
+<script src="/chatbot/chatbot.js"></script>
+
+<script>
+(function () {
+    var emailEl = document.getElementById('profile-user-email');
+    var avatarEl = document.getElementById('user-avatar-letter');
+    var toggle = document.getElementById('user-menu-toggle');
+    var dropdown = document.getElementById('user-dropdown');
+
+    function updateAvatarLetter() {
+        var email = (emailEl.textContent || '').trim();
+        avatarEl.textContent = (email && email !== '—')
+            ? email.charAt(0).toUpperCase()
+            : '';
+        if (!avatarEl.textContent) {
+            avatarEl.innerHTML = '<i class="ph ph-user"></i>';
+        }
+    }
+
+    updateAvatarLetter();
+
+    new MutationObserver(updateAvatarLetter).observe(emailEl, {
+        childList: true,
+        characterData: true,
+        subtree: true
+    });
+
+    toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function () {
+        dropdown.classList.add('hidden');
+    });
+
+    dropdown.addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+})();
+</script>
+
+</body>
+</html>

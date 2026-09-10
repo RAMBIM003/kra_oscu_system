@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>KRA eTIMS Management Platform</title>
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Main stylesheet -->
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+</head>
+
+<body>
+
+<!-- ============================================================
+     FLOATING BRAND LOGO
+     ============================================================ -->
+
+<div class="auth-floating-logo">
+    <img
+        src="/assets/icon.jfif"
+        alt="KRA eTIMS"
+    >
+</div>
+
+
+<!-- ============================================================
+     LOGIN
+     ============================================================ -->
+
+<section
+    id="login-screen"
+    class="auth-screen"
+>
+
+    <div class="auth-container">
+
+        <!-- Visual Side -->
+        <div class="auth-visual">
+
+            <div class="auth-image auth-image-one"></div>
+            <div class="auth-image auth-image-two"></div>
+
+            <div class="auth-image-overlay"></div>
+
+            <div class="auth-visual-content">
+
+                <div class="visual-badge">
+                    <i class="ph ph-shield-check"></i>
+                    Secure Tax Management
+                </div>
+
+                <h2>
+                    Manage your business.
+                    <span>Stay compliant.</span>
+                </h2>
+
+                <p>
+                    A modern eTIMS management platform
+                    for streamlined tax operations.
+                </p>
+
+                <div class="visual-features">
+
+                    <div>
+                        <i class="ph ph-check-circle"></i>
+                        KRA eTIMS Integration
+                    </div>
+
+                    <div>
+                        <i class="ph ph-check-circle"></i>
+                        Business Management
+                    </div>
+
+                    <div>
+                        <i class="ph ph-check-circle"></i>
+                        Secure Transaction Tracking
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Login Panel -->
+        <div class="auth-panel">
+
+            <div class="auth-card">
+
+                <div class="auth-brand">
+
+                    <div class="auth-brand-mark">
+                        K
+                    </div>
+
+                    <div>
+                        <strong>KRA eTIMS</strong>
+                        <span>Management Platform</span>
+                    </div>
+
+                </div>
+
+
+                <div class="auth-heading">
+
+                    <h1>
+                        Welcome back
+                    </h1>
+
+                    <p>
+                        Sign in to manage your business
+                        and eTIMS operations.
+                    </p>
+
+                </div>
+
+
+                <form id="login-form">
+
+                    <div class="form-group">
+
+                        <label for="login-email">
+                            Email address
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="ph ph-user input-icon"></i>
+
+                            <input
+                                type="email"
+                                id="login-email"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <div class="label-row">
+
+                            <label for="login-password">
+                                Password
+                            </label>
+
+                            <button
+                                type="button"
+                                class="auth-forgot"
+                            >
+                                Forgot password?
+                            </button>
+
+                        </div>
+
+                        <div class="input-wrapper">
+
+                            <i class="ph ph-lock input-icon"></i>
+
+                            <input
+                                type="password"
+                                id="login-password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                data-target="login-password"
+                                aria-label="Show password"
+                            >
+                                <i class="ph ph-eye"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="auth-submit"
+                    >
+                        <span>Sign In</span>
+                        <i class="ph ph-arrow-right"></i>
+                    </button>
+
+                    <div
+                        id="login-message"
+                        class="auth-message"
+                    ></div>
+
+                </form>
+
+
+                <div class="auth-divider">
+                    <span>OR</span>
+                </div>
+
+
+                <button
+                    type="button"
+                    class="google-btn"
+                >
+                    <i class="ph ph-google-logo"></i>
+                    <span>Continue with Google</span>
+                </button>
+
+
+                <div class="auth-switch">
+
+                    <span>
+                        Don't have an account?
+                    </span>
+
+                    <button
+                        type="button"
+                        id="show-register"
+                    >
+                        Sign Up
+                    </button>
+
+                </div>
+
+
+                <div class="auth-security">
+
+                    <i class="ph ph-shield-check"></i>
+
+                    <span>
+                        Your connection is secure and
+                        your account information is protected.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     REGISTER
+     ============================================================ -->
+
+<section
+    id="register-screen"
+    class="auth-screen hidden"
+>
+
+    <div class="auth-container">
+
+        <!-- Visual Side -->
+        <div class="auth-visual">
+
+            <div class="auth-image auth-image-one"></div>
+            <div class="auth-image auth-image-two"></div>
+
+            <div class="auth-image-overlay"></div>
+
+            <div class="auth-visual-content">
+
+                <div class="visual-badge">
+                    <i class="ph ph-buildings"></i>
+                    Business Ready
+                </div>
+
+                <h2>
+                    One platform.
+                    <span>Complete control.</span>
+                </h2>
+
+                <p>
+                    Set up your account and manage your
+                    KRA-connected businesses from one place.
+                </p>
+
+                <div class="visual-features">
+
+                    <div>
+                        <i class="ph ph-check-circle"></i>
+                        Create multiple profiles
+                    </div>
+
+                    <div>
+                        <i class="ph ph-check-circle"></i>
+                        Manage businesses
+                    </div>
+
+                    <div>
+                        <i class="ph ph-check-circle"></i>
+                        Track eTIMS activity
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Register Panel -->
+        <div class="auth-panel">
+
+            <div class="auth-card">
+
+                <div class="auth-brand">
+
+                    <div class="auth-brand-mark">
+                        K
+                    </div>
+
+                    <div>
+                        <strong>KRA eTIMS</strong>
+                        <span>Management Platform</span>
+                    </div>
+
+                </div>
+
+
+                <div class="auth-heading">
+
+                    <h1>
+                        Create your account
+                    </h1>
+
+                    <p>
+                        Start managing your business
+                        operations with eTIMS.
+                    </p>
+
+                </div>
+
+
+                <form id="register-form">
+
+                    <div class="form-group">
+
+                        <label for="register-email">
+                            Email address
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="ph ph-user input-icon"></i>
+
+                            <input
+                                type="email"
+                                id="register-email"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="register-password">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="ph ph-lock input-icon"></i>
+
+                            <input
+                                type="password"
+                                id="register-password"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                data-target="register-password"
+                                aria-label="Show password"
+                            >
+                                <i class="ph ph-eye"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="auth-submit"
+                    >
+                        <span>Create Account</span>
+                        <i class="ph ph-arrow-right"></i>
+                    </button>
+
+                    <div
+                        id="register-message"
+                        class="auth-message"
+                    ></div>
+
+                </form>
+
+
+                <div class="auth-divider">
+                    <span>OR</span>
+                </div>
+
+
+                <button
+                    type="button"
+                    class="google-btn"
+                >
+                    <i class="ph ph-google-logo"></i>
+                    <span>Continue with Google</span>
+                </button>
+
+
+                <div class="auth-switch">
+
+                    <span>
+                        Already have an account?
+                    </span>
+
+                    <button
+                        type="button"
+                        id="show-login"
+                    >
+                        Sign In
+                    </button>
+
+                </div>
+
+
+                <div class="auth-security">
+
+                    <i class="ph ph-shield-check"></i>
+
+                    <span>
+                        Your connection is secure and
+                        your account information is protected.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     PROFILE SELECTION
+     ============================================================ -->
+
+<section
+    id="profile-screen"
+    class="page-screen hidden"
+>
+
+    <header class="selection-header">
+
+        <div class="selection-brand">
+
+            <div class="selection-logo">
+                K
+            </div>
+
+            <div>
+                <strong>KRA eTIMS</strong>
+                <span>Management Platform</span>
+            </div>
+
+        </div>
+
+
+        <div class="selection-user">
+
+            <div class="user-avatar">
+                <i class="ph ph-user"></i>
+            </div>
+
+            <div class="user-info">
+                <span>Signed in as</span>
+                <strong id="profile-user-email">
+                    —
+                </strong>
+            </div>
+
+            <button
+                id="profile-logout"
+                class="icon-btn"
+                title="Sign out"
+            >
+                <i class="ph ph-sign-out"></i>
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="selection-main">
+
+        <div class="selection-heading">
+
+            <div>
+
+                <span class="eyebrow">
+                    ACCOUNT
+                </span>
+
+                <h1>
+                    Select a profile
+                </h1>
+
+                <p>
+                    Choose a profile to continue managing
+                    your businesses and tax operations.
+                </p>
+
+            </div>
+
+            <button
+                id="open-create-profile"
+                class="btn btn-primary"
+            >
+                <i class="ph ph-plus"></i>
+                Create Profile
+            </button>
+
+        </div>
+
+
+        <div
+            id="profiles-list"
+            class="cards-grid"
+        ></div>
+
+    </main>
+
+</section>
+
+
+
+<!-- ============================================================
+     BUSINESS SELECTION
+     ============================================================ -->
+
+<section
+    id="business-screen"
+    class="page-screen hidden"
+>
+
+    <header class="selection-header">
+
+        <div class="selection-brand">
+
+            <div class="selection-logo">
+                K
+            </div>
+
+            <div>
+                <strong>KRA eTIMS</strong>
+                <span>Management Platform</span>
+            </div>
+
+        </div>
+
+
+        <div class="selection-user">
+
+            <div class="user-avatar">
+                <i class="ph ph-user"></i>
+            </div>
+
+            <div class="user-info">
+                <span>Profile</span>
+                <strong id="business-profile-label">
+                    —
+                </strong>
+            </div>
+
+            <button
+                id="business-logout"
+                class="icon-btn"
+                title="Sign out"
+            >
+                <i class="ph ph-sign-out"></i>
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="selection-main">
+
+        <div class="selection-heading">
+
+            <div>
+
+                <span class="eyebrow">
+                    BUSINESS
+                </span>
+
+                <h1>
+                    Select a business
+                </h1>
+
+                <p>
+                    Choose the business you want to
+                    manage through the eTIMS platform.
+                </p>
+
+            </div>
+
+            <button
+                id="open-create-business"
+                class="btn btn-primary"
+            >
+                <i class="ph ph-plus"></i>
+                Add Business
+            </button>
+
+        </div>
+
+
+        <div
+            id="businesses-list"
+            class="cards-grid"
+        ></div>
+
+    </main>
+
+</section>
+
+
+
+<!-- ============================================================
+     MAIN APPLICATION
+     ============================================================ -->
+
+<section
+    id="main-app"
+    class="main-app hidden"
+>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="sidebar-logo">
+                K
+            </div>
+
+            <div class="sidebar-brand-text">
+                <strong>KRA eTIMS</strong>
+                <span>Management</span>
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-business">
+
+            <span class="sidebar-label">
+                ACTIVE BUSINESS
+            </span>
+
+            <div class="sidebar-business-row">
+
+                <div class="business-mini-icon">
+                    <i class="ph ph-buildings"></i>
+                </div>
+
+                <div class="sidebar-business-text">
+                    <strong id="sidebar-business-name">
+                        —
+                    </strong>
+
+                    <span>
+                        Connected
+                    </span>
+                </div>
+
+            </div>
+
+            <button
+                id="switch-business"
+                class="switch-business-btn"
+            >
+                <i class="ph ph-arrows-left-right"></i>
+                Switch Business
+            </button>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <span class="sidebar-label">
+                WORKSPACE
+            </span>
+
+            <button
+                class="nav-item active"
+                data-page="dashboard"
+            >
+                <i class="ph ph-chart-line-up"></i>
+                <span>Dashboard</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="items"
+            >
+                <i class="ph ph-package"></i>
+                <span>Items</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="purchases"
+            >
+                <i class="ph ph-arrow-down-left"></i>
+                <span>Purchases</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="sales"
+            >
+                <i class="ph ph-arrow-up-right"></i>
+                <span>Sales</span>
+            </button>
+
+            <button
+                class="nav-item"
+                data-page="branches"
+            >
+                <i class="ph ph-buildings"></i>
+                <span>Branches</span>
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <div class="sidebar-user">
+
+                <div class="sidebar-user-avatar">
+                    <i class="ph ph-user"></i>
+                </div>
+
+                <div class="sidebar-user-details">
+
+                    <strong>
+                        Account
+                    </strong>
+
+                    <span id="app-user-email">
+                        —
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="app-logout"
+                class="logout-btn"
+            >
+                <i class="ph ph-sign-out"></i>
+                <span>Sign Out</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="app-content">
+
+        <header class="topbar">
+
+            <div class="topbar-heading">
+
+                <span class="eyebrow">
+                    KRA ETIMS
+                </span>
+
+                <h1 id="page-title">
+                    Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="topbar-context">
+
+                <div class="context-item">
+                    <i class="ph ph-user-circle"></i>
+
+                    <span id="current-profile-name">
+                        —
+                    </span>
+                </div>
+
+                <div class="context-divider"></div>
+
+                <div class="context-item">
+                    <i class="ph ph-buildings"></i>
+
+                    <span id="current-business-name">
+                        —
+                    </span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <div class="app-page-content">
+
+            <!-- ==================================================
+                 DASHBOARD
+                 ================================================== -->
+
+            <section
+                id="page-dashboard"
+                class="app-page"
+            >
+
+                <div class="page-toolbar">
+
+                    <div>
+                        <h2>
+                            Business overview
+                        </h2>
+
+                        <p>
+                            Monitor purchases, sales,
+                            inventory and eTIMS activity.
+                        </p>
+                    </div>
+
+                    <button
+                        id="dashboard-refresh"
+                        class="btn btn-secondary"
+                    >
+                        <i class="ph ph-arrows-clockwise"></i>
+                        Refresh
+                    </button>
+
+                </div>
+
+
+                <div class="stats-grid">
+
+                    <div class="stat-card stat-card-purchases">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon">
+                                <i class="ph ph-shopping-cart"></i>
+                            </div>
+
+                            <span class="stat-trend">
+                                Purchases
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value">
+                            <span id="stat-purchases">
+                                0
+                            </span>
+                        </div>
+
+                        <div class="stat-label">
+                            Total purchase transactions
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card stat-card-amount">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon">
+                                <i class="ph ph-currency-circle-dollar"></i>
+                            </div>
+
+                            <span class="stat-trend">
+                                Value
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value">
+
+                            <span>
+                                KES
+                            </span>
+
+                            <span id="stat-purchase-amount">
+                                0
+                            </span>
+
+                        </div>
+
+                        <div class="stat-label">
+                            Total purchase amount
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card stat-card-sales">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon">
+                                <i class="ph ph-receipt"></i>
+                            </div>
+
+                            <span class="stat-trend">
+                                Sales
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value">
+                            <span id="stat-sales">
+                                0
+                            </span>
+                        </div>
+
+                        <div class="stat-label">
+                            Total sales transactions
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card stat-card-items">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon">
+                                <i class="ph ph-package"></i>
+                            </div>
+
+                            <span class="stat-trend">
+                                Inventory
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value">
+                            <span id="stat-items">
+                                0
+                            </span>
+                        </div>
+
+                        <div class="stat-label">
+                            Registered business items
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-grid">
+
+                    <div class="panel chart-panel">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <h3>
+                                    Purchase activity
+                                </h3>
+
+                                <p>
+                                    Monthly purchase trend
+                                </p>
+                            </div>
+
+                            <div class="panel-icon">
+                                <i class="ph ph-chart-line-up"></i>
+                            </div>
+
+                        </div>
+
+                        <div
+                            id="monthly-chart"
+                            class="chart-container"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <h3>
+                                    Recent purchases
+                                </h3>
+
+                                <p>
+                                    Latest transaction activity
+                                </p>
+                            </div>
+
+                            <div class="panel-icon">
+                                <i class="ph ph-clock-counter-clockwise"></i>
+                            </div>
+
+                        </div>
+
+                        <div
+                            id="recent-purchases"
+                            class="recent-list"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 ITEMS
+                 ================================================== -->
+
+            <section
+                id="page-items"
+                class="app-page hidden"
+            >
+
+                <div class="page-toolbar">
+
+                    <div>
+                        <h2>
+                            Items
+                        </h2>
+
+                        <p>
+                            Manage products and services
+                            registered for your business.
+                        </p>
+                    </div>
+
+                    <button
+                        id="add-item-btn"
+                        class="btn btn-primary"
+                    >
+                        <i class="ph ph-plus"></i>
+                        Add Item
+                    </button>
+
+                </div>
+
+
+                <div class="panel table-panel">
+
+                    <div class="table-header">
+
+                        <div>
+                            <h3>
+                                Item catalogue
+                            </h3>
+
+                            <p>
+                                Products and services
+                            </p>
+                        </div>
+
+                        <div class="table-header-icon">
+                            <i class="ph ph-package"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table
+                            class="data-table"
+                            id="items-table"
+                        >
+                            <thead>
+                                <tr>
+                                    <th>Item Code</th>
+                                    <th>Item Name</th>
+                                    <th>Category</th>
+                                    <th>Unit</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 PURCHASES
+                 ================================================== -->
+
+            <section
+                id="page-purchases"
+                class="app-page hidden"
+            >
+
+                <div class="page-toolbar">
+
+                    <div>
+                        <h2>
+                            Purchases
+                        </h2>
+
+                        <p>
+                            Synchronize and review purchase
+                            transactions from KRA eTIMS.
+                        </p>
+                    </div>
+
+                    <button
+                        id="sync-purchases-btn"
+                        class="btn btn-primary"
+                    >
+                        <i class="ph ph-arrows-clockwise"></i>
+                        Sync Purchases
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="purchase-status"
+                    class="status-message"
+                ></div>
+
+
+                <div class="panel table-panel">
+
+                    <div class="table-header">
+
+                        <div>
+                            <h3>
+                                Purchase transactions
+                            </h3>
+
+                            <p>
+                                Latest synchronized records
+                            </p>
+                        </div>
+
+                        <div class="table-header-icon">
+                            <i class="ph ph-shopping-cart"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table
+                            class="data-table"
+                            id="purchases-table"
+                        >
+                            <thead>
+                                <tr>
+                                    <th>Invoice</th>
+                                    <th>Supplier</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 SALES
+                 ================================================== -->
+
+            <section
+                id="page-sales"
+                class="app-page hidden"
+            >
+
+                <div class="page-toolbar">
+
+                    <div>
+                        <h2>
+                            Sales
+                        </h2>
+
+                        <p>
+                            Record and manage business sales
+                            transactions.
+                        </p>
+                    </div>
+
+                    <button
+                        id="add-sale-btn"
+                        class="btn btn-primary"
+                    >
+                        <i class="ph ph-plus"></i>
+                        Record Sale
+                    </button>
+
+                </div>
+
+
+                <div class="panel table-panel">
+
+                    <div class="table-header">
+
+                        <div>
+                            <h3>
+                                Sales transactions
+                            </h3>
+
+                            <p>
+                                Business sales activity
+                            </p>
+                        </div>
+
+                        <div class="table-header-icon">
+                            <i class="ph ph-receipt"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table
+                            class="data-table"
+                            id="sales-table"
+                        >
+                            <thead>
+                                <tr>
+                                    <th>Receipt</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 BRANCHES
+                 ================================================== -->
+
+            <section
+                id="page-branches"
+                class="app-page hidden"
+            >
+
+                <div class="page-toolbar">
+
+                    <div>
+                        <h2>
+                            Branch Information
+                        </h2>
+
+                        <p>
+                            View branches associated with
+                            the active business.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="branch-details"
+                    class="branch-grid"
+                ></div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</section>
+
+
+
+<!-- ============================================================
+     PROFILE MODAL
+     ============================================================ -->
+
+<div
+    id="profile-modal"
+    class="modal hidden"
+>
+
+    <div class="modal-dialog">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    PROFILE
+                </span>
+
+                <h2>
+                    Create profile
+                </h2>
+
+            </div>
+
+            <button
+                class="close-modal icon-btn"
+                data-modal="profile-modal"
+                type="button"
+            >
+                <i class="ph ph-x"></i>
+            </button>
+
+        </div>
+
+
+        <form id="profile-form">
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label for="profile-name">
+                        Profile name
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="ph ph-user-circle input-icon"></i>
+
+                        <input
+                            type="text"
+                            id="profile-name"
+                            placeholder="e.g. My Business Profile"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="profile-type">
+                        Profile type
+                    </label>
+
+                    <div class="select-wrapper">
+
+                        <i class="ph ph-identification-card"></i>
+
+                        <select id="profile-type" required>
+
+                            <option value="">
+                                Select profile type
+                            </option>
+
+                            <option value="personal">
+                                Personal
+                            </option>
+
+                            <option value="business">
+                                Business
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary close-modal"
+                    data-modal="profile-modal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    <i class="ph ph-plus"></i>
+                    Create Profile
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     BUSINESS MODAL
+     ============================================================ -->
+
+<div
+    id="business-modal"
+    class="modal hidden"
+>
+
+    <div class="modal-dialog modal-dialog-large">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    BUSINESS
+                </span>
+
+                <h2>
+                    Add business
+                </h2>
+
+                <p>
+                    Connect a business to the active profile.
+                </p>
+
+            </div>
+
+            <button
+                class="close-modal icon-btn"
+                data-modal="business-modal"
+                type="button"
+            >
+                <i class="ph ph-x"></i>
+            </button>
+
+        </div>
+
+
+        <form id="business-form">
+
+            <div class="modal-body">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="business-name">
+                            Business name
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="ph ph-buildings input-icon"></i>
+
+                            <input
+                                type="text"
+                                id="business-name"
+                                placeholder="Business name"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="business-kra-pin">
+                            KRA PIN
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="ph ph-identification-card input-icon"></i>
+
+                            <input
+                                type="text"
+                                id="business-kra-pin"
+                                placeholder="P000000000X"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="business-branch-id">
+                            Branch ID
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="ph ph-git-branch input-icon"></i>
+
+                            <input
+                                type="text"
+                                id="business-branch-id"
+                                placeholder="Branch ID"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="business-device-serial">
+                            Device Serial
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="ph ph-device-mobile input-icon"></i>
+
+                            <input
+                                type="text"
+                                id="business-device-serial"
+                                placeholder="Device serial number"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group form-grid-full">
+
+                        <label for="business-cmc-key">
+                            CMC Key
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="ph ph-key input-icon"></i>
+
+                            <input
+                                type="password"
+                                id="business-cmc-key"
+                                placeholder="Enter CMC key"
+                                required
+                            >
+
+                        </div>
+
+                        <small class="field-help">
+                            Your CMC key is used for the secure
+                            KRA eTIMS integration.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="business-form-message"
+                    class="auth-message"
+                ></div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary close-modal"
+                    data-modal="business-modal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    <i class="ph ph-plugs-connected"></i>
+                    Connect Business
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     ITEM MODAL
+     ============================================================ -->
+
+<div
+    id="item-modal"
+    class="modal hidden"
+>
+
+    <div class="modal-dialog">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    INVENTORY
+                </span>
+
+                <h2>
+                    Add item
+                </h2>
+
+            </div>
+
+            <button
+                class="close-modal icon-btn"
+                data-modal="item-modal"
+                type="button"
+            >
+                <i class="ph ph-x"></i>
+            </button>
+
+        </div>
+
+
+        <form id="item-form">
+
+            <div class="modal-body">
+
+                <div class="form-group">
+
+                    <label for="item-code">
+                        Item code
+                    </label>
+
+                    <input
+                        type="text"
+                        id="item-code"
+                        placeholder="Item code"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="item-name">
+                        Item name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="item-name"
+                        placeholder="Item name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="item-category">
+                            Category
+                        </label>
+
+                        <input
+                            type="text"
+                            id="item-category"
+                            placeholder="Category"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="item-unit">
+                            Unit
+                        </label>
+
+                        <input
+                            type="text"
+                            id="item-unit"
+                            placeholder="e.g. pcs"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="item-price">
+                        Unit price
+                    </label>
+
+                    <div class="input-prefix">
+
+                        <span>
+                            KES
+                        </span>
+
+                        <input
+                            type="number"
+                            id="item-price"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary close-modal"
+                    data-modal="item-modal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    <i class="ph ph-plus"></i>
+                    Add Item
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     APPLICATION SCRIPTS
+     ============================================================ -->
+
+<script src="/js/auth.js"></script>
+<script src="/js/profiles.js"></script>
+<script src="/js/business.js"></script>
+<script src="/js/dashboard.js"></script>
+<script src="/js/items.js"></script>
+<script src="/js/purchases.js"></script>
+<script src="/js/sales.js"></script>
+<script src="/js/app.js"></script>
+
+</body>
+</html>

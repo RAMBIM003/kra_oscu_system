@@ -1,0 +1,413 @@
+/* ============================================================
+   KRA eTIMS CHATBOT WIDGET
+   DigiTax-style structure, eTIMS red (#ef4444) instead of green.
+   Self-contained: does not read any variables from global.css.
+   ============================================================ */
+
+.etims-chatbot-trigger {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+
+    width: 56px;
+    height: 56px;
+
+    display: grid;
+    place-items: center;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: #ef4444;
+    color: #fff;
+
+    font-size: 24px;
+
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.35);
+
+    z-index: 900;
+
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.etims-chatbot-trigger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(239, 68, 68, 0.42);
+}
+
+.etims-chatbot-panel {
+    position: fixed;
+    right: 24px;
+    bottom: 92px;
+
+    width: 360px;
+    max-height: min(600px, calc(100vh - 120px));
+
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 20px;
+    overflow: hidden;
+
+    background: #fff;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.22);
+
+    z-index: 900;
+}
+
+.etims-chatbot-panel.hidden {
+    display: none;
+}
+
+.etims-chatbot-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 16px 18px;
+
+    background: #ef4444;
+    color: #fff;
+}
+
+.etims-chatbot-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.etims-chatbot-brand-mark {
+    width: 28px;
+    height: 28px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.2);
+
+    font-size: 15px;
+}
+
+.etims-chatbot-brand strong {
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.etims-chatbot-icon-btn {
+    width: 28px;
+    height: 28px;
+
+    display: grid;
+    place-items: center;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: transparent;
+    color: #fff;
+
+    font-size: 15px;
+}
+
+.etims-chatbot-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.etims-chatbot-body {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 22px 18px 12px;
+
+    background: linear-gradient(180deg, #fef2f2 0%, #ffffff 140px);
+}
+
+.etims-chatbot-tab-panel.hidden {
+    display: none;
+}
+
+.etims-chatbot-greeting {
+    margin-bottom: 20px;
+
+    color: #0f172a;
+
+    font-size: 21px;
+    line-height: 1.3;
+    font-weight: 800;
+}
+
+.etims-chatbot-wave {
+    display: inline-block;
+}
+
+.etims-chatbot-contact-btn {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 14px 16px;
+
+    margin-bottom: 16px;
+
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+
+    background: #fff;
+    color: #0f172a;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+.etims-chatbot-contact-btn i {
+    color: #ef4444;
+    font-size: 16px;
+}
+
+.etims-chatbot-links {
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    overflow: hidden;
+
+    background: #fff;
+}
+
+.etims-chatbot-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 13px 16px;
+
+    border-bottom: 1px solid #f1f5f9;
+
+    color: #0f172a;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.etims-chatbot-link:last-child {
+    border-bottom: 0;
+}
+
+.etims-chatbot-link:hover {
+    background: #fef2f2;
+}
+
+.etims-chatbot-link-accent {
+    color: #ef4444;
+}
+
+.etims-chatbot-link i {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.etims-chatbot-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 60px 20px;
+
+    text-align: center;
+
+    color: #94a3b8;
+}
+
+.etims-chatbot-empty i {
+    font-size: 30px;
+    margin-bottom: 4px;
+}
+
+.etims-chatbot-empty strong {
+    color: #0f172a;
+    font-size: 12px;
+}
+
+.etims-chatbot-empty span {
+    font-size: 10px;
+    max-width: 220px;
+}
+
+.etims-chatbot-search {
+    position: relative;
+
+    margin-bottom: 16px;
+}
+
+.etims-chatbot-search i {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    color: #94a3b8;
+    font-size: 15px;
+}
+
+.etims-chatbot-search input {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 14px 0 38px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+
+    background: #fff;
+    color: #0f172a;
+
+    outline: none;
+}
+
+.etims-chatbot-search input:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.etims-chatbot-articles {
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 16px;
+
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    overflow: hidden;
+
+    background: #fff;
+}
+
+.etims-chatbot-article {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 13px 16px;
+
+    border-bottom: 1px solid #f1f5f9;
+
+    color: #334155;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.etims-chatbot-article:last-child {
+    border-bottom: 0;
+}
+
+.etims-chatbot-article:hover {
+    background: #fef2f2;
+}
+
+.etims-chatbot-article i {
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
+.etims-chatbot-ticket {
+    padding: 14px 16px;
+
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+
+    background: #fff;
+}
+
+.etims-chatbot-ticket strong {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: #0f172a;
+    font-size: 12px;
+}
+
+.etims-chatbot-ticket-btn {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 11px 14px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: #ef4444;
+    color: #fff;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.etims-chatbot-tabbar {
+    display: flex;
+
+    border-top: 1px solid #f1f5f9;
+
+    background: #fff;
+}
+
+.etims-chatbot-tab {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+
+    padding: 12px 0;
+
+    border: 0;
+    background: transparent;
+    color: #94a3b8;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.etims-chatbot-tab i {
+    font-size: 19px;
+}
+
+.etims-chatbot-tab.active {
+    color: #ef4444;
+}
+
+@media (max-width: 480px) {
+
+    .etims-chatbot-panel {
+        right: 12px;
+        left: 12px;
+        bottom: 84px;
+
+        width: auto;
+    }
+
+    .etims-chatbot-trigger {
+        right: 16px;
+        bottom: 16px;
+    }
+
+}

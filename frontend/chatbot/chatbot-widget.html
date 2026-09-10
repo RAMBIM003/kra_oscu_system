@@ -1,0 +1,196 @@
+<!--
+  eTIMS chatbot widget — drop-in component.
+
+  How to use:
+  1. Add to <head> (or before </body>) on any page:
+       <link rel="stylesheet" href="/chatbot/chatbot.css">
+  2. Paste this whole block right before your closing </body> tag.
+  3. Add before your other JS includes, or at the very end of body:
+       <script src="/chatbot/chatbot.js"></script>
+
+  All ids/classes are prefixed "etims-chatbot" so nothing here collides
+  with your existing profile/business/dashboard styles or scripts.
+  Nothing in this file talks to profiles.js, auth.js, etc. — it is
+  fully self-contained until you wire it up yourself.
+-->
+
+<button
+    id="etims-chatbot-trigger"
+    class="etims-chatbot-trigger"
+    type="button"
+    aria-label="Open help chat"
+>
+    <i class="ph ph-chat-circle-dots"></i>
+</button>
+
+<div
+    id="etims-chatbot-panel"
+    class="etims-chatbot-panel hidden"
+>
+
+    <div class="etims-chatbot-header">
+
+        <div class="etims-chatbot-brand">
+            <div class="etims-chatbot-brand-mark">
+                <i class="ph ph-chat-circle-dots"></i>
+            </div>
+            <strong>eTIMS Help</strong>
+        </div>
+
+        <button
+            id="etims-chatbot-close"
+            class="etims-chatbot-icon-btn"
+            type="button"
+            aria-label="Close help chat"
+        >
+            <i class="ph ph-x"></i>
+        </button>
+
+    </div>
+
+    <div class="etims-chatbot-body">
+
+        <div
+            id="etims-chatbot-tab-home"
+            class="etims-chatbot-tab-panel"
+        >
+
+            <h2 class="etims-chatbot-greeting">
+                Hi there
+                <span class="etims-chatbot-wave">👋</span>
+                <br>
+                How can we help?
+            </h2>
+
+            <button class="etims-chatbot-contact-btn" type="button">
+                Contact us
+                <i class="ph ph-arrow-right"></i>
+            </button>
+
+            <div class="etims-chatbot-links">
+
+                <a
+                    href="#"
+                    class="etims-chatbot-link etims-chatbot-link-accent"
+                >
+                    eTIMS API docs
+                    <i class="ph ph-arrow-square-out"></i>
+                </a>
+
+                <a
+                    href="#"
+                    class="etims-chatbot-link"
+                >
+                    eTIMS website
+                    <i class="ph ph-arrow-square-out"></i>
+                </a>
+
+                <a
+                    href="#"
+                    class="etims-chatbot-link"
+                >
+                    Support centre
+                    <i class="ph ph-arrow-square-out"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="etims-chatbot-tab-messages"
+            class="etims-chatbot-tab-panel hidden"
+        >
+
+            <div class="etims-chatbot-empty">
+                <i class="ph ph-envelope-simple"></i>
+                <strong>No messages yet</strong>
+                <span>Start a conversation and we will reply here.</span>
+            </div>
+
+        </div>
+
+
+        <div
+            id="etims-chatbot-tab-help"
+            class="etims-chatbot-tab-panel hidden"
+        >
+
+            <div class="etims-chatbot-search">
+                <i class="ph ph-magnifying-glass"></i>
+                <input
+                    id="etims-chatbot-search-input"
+                    type="text"
+                    placeholder="Search for help"
+                >
+            </div>
+
+            <div class="etims-chatbot-articles">
+
+                <a href="#" class="etims-chatbot-article">
+                    Set up a profile and business
+                    <i class="ph ph-caret-right"></i>
+                </a>
+
+                <a href="#" class="etims-chatbot-article">
+                    Introduction to the eTIMS dashboard
+                    <i class="ph ph-caret-right"></i>
+                </a>
+
+                <a href="#" class="etims-chatbot-article">
+                    Connecting a business to KRA
+                    <i class="ph ph-caret-right"></i>
+                </a>
+
+                <a href="#" class="etims-chatbot-article">
+                    Contact support
+                    <i class="ph ph-caret-right"></i>
+                </a>
+
+            </div>
+
+            <div class="etims-chatbot-ticket">
+                <strong>Create a ticket</strong>
+                <button class="etims-chatbot-ticket-btn" type="button">
+                    General support
+                    <i class="ph ph-ticket"></i>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="etims-chatbot-tabbar">
+
+        <button
+            class="etims-chatbot-tab active"
+            data-tab="home"
+            type="button"
+        >
+            <i class="ph ph-house"></i>
+            Home
+        </button>
+
+        <button
+            class="etims-chatbot-tab"
+            data-tab="messages"
+            type="button"
+        >
+            <i class="ph ph-chat-text"></i>
+            Messages
+        </button>
+
+        <button
+            class="etims-chatbot-tab"
+            data-tab="help"
+            type="button"
+        >
+            <i class="ph ph-question"></i>
+            Help
+        </button>
+
+    </div>
+
+</div>

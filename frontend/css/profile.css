@@ -1,0 +1,105 @@
+/* ============================================================
+   KRA eTIMS PROFILE
+   Page-specific styles will be moved here after testing.
+   Original styles are currently preserved in global.css.
+   ============================================================ */
+
+/* ---- Header: lighter saturated red (agreed: #ef4444), brand removed, avatar dropdown on the right ---- */
+
+.selection-header {
+    justify-content: flex-end;
+    background: #ef4444;
+    border-bottom: 0;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-menu-trigger {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    border: 0;
+    background: transparent;
+
+    padding: 6px 8px;
+    border-radius: 8px;
+
+    transition: background 0.2s ease;
+}
+
+.user-menu-trigger:hover {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.user-menu-trigger .user-avatar {
+    background: #fff;
+    color: #ef4444;
+    font-weight: 800;
+}
+
+.user-menu-trigger .user-info span {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.user-menu-trigger .user-info strong {
+    color: #fff;
+}
+
+.user-menu-caret {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 13px;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+
+    min-width: 160px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: #fff;
+    box-shadow: var(--shadow-lg);
+
+    overflow: hidden;
+
+    z-index: 30;
+}
+
+.user-dropdown-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 11px 14px;
+
+    border: 0;
+    background: transparent;
+    color: var(--danger);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-align: left;
+}
+
+.user-dropdown-item:hover {
+    background: var(--primary-soft);
+}
+
+.user-dropdown-item i {
+    font-size: 15px;
+}
+
+/* ---- Modal: extra select field spacing matches existing form-group ---- */
+
+#profile-location {
+    padding-left: 39px;
+}
