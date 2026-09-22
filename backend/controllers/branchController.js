@@ -1,4 +1,9 @@
 const pool = require("../config/database");
+const kraService = require("../services/kraService");
+
+async function syncBranches(req, res) {
+    return kraService.branches(req, res);
+}
 
 async function getBranches(req, res) {
     const result = await pool.query(
@@ -83,5 +88,6 @@ async function createBranch(req, res) {
 
 module.exports = {
     getBranches,
-    createBranch
+    createBranch,
+    syncBranches
 };

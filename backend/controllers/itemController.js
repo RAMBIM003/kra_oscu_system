@@ -1,4 +1,9 @@
 const pool = require("../config/database");
+const kraService = require("../services/kraService");
+
+async function syncItems(req, res) {
+    return kraService.items(req, res);
+}
 
 async function getItems(req, res) {
     const result = await pool.query(
@@ -81,5 +86,6 @@ async function createItem(req, res) {
 
 module.exports = {
     getItems,
-    createItem
+    createItem,
+    syncItems
 };

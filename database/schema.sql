@@ -25,8 +25,18 @@ CREATE TABLE IF NOT EXISTS businesses (
     business_address TEXT,
     phone VARCHAR(50),
     email VARCHAR(255),
+    environment VARCHAR(10) NOT NULL DEFAULT 'test'
+        CHECK (environment IN ('test', 'live')),
+    status VARCHAR(20) NOT NULL DEFAULT 'pending'
+        CHECK (status IN ('pending', 'connected', 'error')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Migration for databases created before environment/status existed
+ALTER TABLE businesses
+    ADD COLUMN IF NOT EXISTS environment VARCHAR(10) NOT NULL DEFAULT 'test';
+ALTER TABLE businesses
+    ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT NULL DEFAULT 'pending';
 
 CREATE TABLE IF NOT EXISTS branches (
     id SERIAL PRIMARY KEY,
@@ -139,6 +149,55 @@ ON sales(business_id);
 
 CREATE INDEX IF NOT EXISTS idx_sync_state_business_id
 ON sync_state(business_id);
+
+CREATE TABLE IF NOT EXISTS payments (
+    id BIGSERIAL PRIMARY KEY,
+    business_id INTEGER NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
+    mpesa_receipt_no VARCHAR(50) NOT NULL,
+    amount NUMERIC(18,2) NOT NULL,
+    mpesa_recipient_name VARCHAR(255),
+    phone VARCHAR(50),
+    payment_time TIMESTAMP,
+    raw_sms TEXT,
+    status VARCHAR(20) NOT NULL DEFAULT 'unmatched'
+        CHECK (status IN ('unmatched', 'matched')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (business_id, mpesa_receipt_no)
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+    id BIGSERIAL PRIMARY KEY,
+    business_id INTEGER NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
+    purchase_id BIGINT REFERENCES purchases(id) ON DELETE SET NULL,
+    payment_id BIGINT REFERENCES payments(id) ON DELETE SET NULL,
+    kra_seller_name VARCHAR(255),
+    mpesa_recipient_name VARCHAR(255),
+    invoice_no VARCHAR(150),
+    invoice_date VARCHAR(50),
+    taxable_amt NUMERIC(18,2) DEFAULT 0,
+    vat_amt NUMERIC(18,2) DEFAULT 0,
+    amount NUMERIC(18,2),
+    mpesa_receipt_no VARCHAR(50),
+    payment_time TIMESTAMP,
+    status VARCHAR(20) NOT NULL DEFAULT 'unmatched'
+        CHECK (status IN ('unmatched', 'matched')),
+    matched_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (business_id, purchase_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_payments_business_id
+ON payments(business_id);
+
+CREATE INDEX IF NOT EXISTS idx_payments_status
+ON payments(status);
+
+CREATE INDEX IF NOT EXISTS idx_transactions_business_id
+ON transactions(business_id);
+
+CREATE INDEX IF NOT EXISTS idx_transactions_status
+ON transactions(status);
 
 CREATE OR REPLACE VIEW monthly_dashboard AS
 SELECT

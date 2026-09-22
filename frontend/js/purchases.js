@@ -1,4 +1,6 @@
-﻿const Purchases = {
+const Purchases = {
+
+    _lastData: [],
 
     async sync() {
 
@@ -27,17 +29,24 @@
                 );
             }
 
-            const purchases =
-                data.purchases ||
-                data.records ||
-                [];
+            const count =
+                data.count ??
+                (data.purchases || data.records || []).length;
 
             status.textContent =
-                `Synchronization complete. ${purchases.length} purchase record(s) received.`;
+                `Synchronization complete. ${count} purchase record(s) received.`;
 
-            this.render(purchases);
+            await this.render();
 
-            await Dashboard.load();
+            if (window.Toast) {
+                Toast.success(
+                    `${count} purchase record(s) synchronized`
+                );
+            }
+
+            if (window.Dashboard) {
+                await Dashboard.load();
+            }
 
         } catch (error) {
 
@@ -46,20 +55,47 @@
             status.textContent =
                 `Sync failed: ${error.message}`;
 
+            if (window.Toast) {
+                Toast.error(`Sync failed: ${error.message}`);
+            }
+
         }
 
     },
 
-    render(purchases) {
+    async getAll() {
+
+        const response = await fetch(
+            `/api/purchases/${App.currentBusiness.id}`,
+            {
+                headers: Auth.headers()
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(
+                data.message || "Unable to load purchases"
+            );
+        }
+
+        return data.purchases || [];
+
+    },
+
+    renderRows(items) {
 
         const tbody =
-            document.getElementById("purchases-table");
+            document.getElementById("purchases-table-body");
 
-        if (!purchases.length) {
+        if (!tbody) return;
+
+        if (!items.length) {
 
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5">
+                    <td colspan="5" class="table-empty-cell">
                         No purchase transactions found.
                     </td>
                 </tr>
@@ -69,20 +105,22 @@
 
         }
 
-        tbody.innerHTML = purchases.map(item => `
+        tbody.innerHTML = items.map(item => `
 
             <tr>
 
                 <td>
-                    ${item.invoice_no ||
+                    ${item.invoice_number ||
+                      item.invoice_no ||
                       item.invoiceNo ||
-                      item.transaction_no ||
+                      item.spplrInvcNo ||
                       "-"}
                 </td>
 
                 <td>
                     ${item.supplier_name ||
                       item.supplierName ||
+                      item.spplrNm ||
                       item.customer_name ||
                       "-"}
                 </td>
@@ -90,6 +128,7 @@
                 <td>
                     ${item.transaction_date ||
                       item.transactionDate ||
+                      item.salesDt ||
                       "-"}
                 </td>
 
@@ -97,6 +136,7 @@
                     KES ${Number(
                         item.total_amount ||
                         item.totalAmount ||
+                        item.totAmt ||
                         item.amount ||
                         0
                     ).toLocaleString()}
@@ -111,6 +151,75 @@
             </tr>
 
         `).join("");
+
+    },
+
+    async render() {
+
+        const tbody =
+            document.getElementById("purchases-table-body");
+
+        if (!tbody) return;
+
+        try {
+
+            this._lastData = await this.getAll();
+            this.renderRows(this._lastData);
+            this.wireSearch();
+
+            if (typeof startGenericTicker === "function") {
+                startGenericTicker("purchases-ticker-wrapper");
+            }
+
+        } catch (error) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="table-empty-cell">
+                        ${error.message}
+                    </td>
+                </tr>
+            `;
+
+        }
+
+    },
+
+    wireSearch() {
+
+        const input = document.getElementById("purchases-search");
+
+        if (!input || input._wired) return;
+
+        input._wired = true;
+
+        input.addEventListener("input", () => {
+
+            const term = input.value.trim().toLowerCase();
+
+            if (!term) {
+                this.renderRows(this._lastData);
+                return;
+            }
+
+            const filtered = this._lastData.filter(item => {
+
+                const invoice = String(
+                    item.invoice_number || item.invoice_no || ""
+                ).toLowerCase();
+
+                const supplier = String(
+                    item.supplier_name || ""
+                ).toLowerCase();
+
+                return invoice.includes(term) ||
+                    supplier.includes(term);
+
+            });
+
+            this.renderRows(filtered);
+
+        });
 
     }
 

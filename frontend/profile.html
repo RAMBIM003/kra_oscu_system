@@ -10,7 +10,10 @@
 
     <title>Profiles - KRA eTIMS</title>
 
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/profile.css">
@@ -25,6 +28,11 @@
 >
 
     <header class="selection-header">
+
+        <div
+            id="theme-toggle-mount"
+            style="margin-right: 12px;"
+        ></div>
 
         <div class="user-menu">
 
@@ -457,13 +465,14 @@
 </div>
 
 
+<script src="/js/theme.js"></script>
+<script src="/js/toast.js"></script>
 <script src="/js/auth.js"></script>
 <script src="/js/profiles.js"></script>
 <script src="/js/business.js"></script>
 <script src="/js/dashboard.js"></script>
 <script src="/js/items.js"></script>
 <script src="/js/purchases.js"></script>
-<script src="/js/sales.js"></script>
 <script src="/js/app.js"></script>
 <script src="/chatbot/chatbot.js"></script>
 

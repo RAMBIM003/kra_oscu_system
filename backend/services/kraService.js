@@ -52,26 +52,21 @@ async function postKRA(endpoint, credentials, body) {
     return response.data;
 }
 
-async function initialize(req, res) {
-    const { businessId } = req.body;
-
-    if (!businessId) {
-        return res.status(400).json({
-            success: false,
-            message: "businessId is required"
-        });
-    }
-
+// Core initialization logic, reusable outside of an HTTP request/
+// response cycle (e.g. called directly from businessController when
+// a business is first connected).
+async function initializeBusiness(businessId, userId) {
     const business = await getBusinessCredentials(
         businessId,
-        req.user.id
+        userId
     );
 
     if (!business.cmc_key) {
-        return res.status(400).json({
-            success: false,
-            message: "CMC key is not configured for this business"
-        });
+        const error = new Error(
+            "CMC key is not configured for this business"
+        );
+        error.status = 400;
+        throw error;
     }
 
     const body = {
@@ -83,22 +78,50 @@ async function initialize(req, res) {
             ""
     };
 
-    try {
-        const data = await postKRA(
-            "selectInitOsdcInfo",
-            business,
-            body
-        );
+    const data = await postKRA(
+        "selectInitOsdcInfo",
+        business,
+        body
+    );
 
-        const alreadyInstalled =
-            String(data.resultCd) === "902";
+    const alreadyInstalled =
+        String(data.resultCd) === "902";
+
+    return {
+        initialized: alreadyInstalled || String(data.resultCd) === "000",
+        kra: data
+    };
+}
+
+async function initialize(req, res) {
+    const { businessId } = req.body;
+
+    if (!businessId) {
+        return res.status(400).json({
+            success: false,
+            message: "businessId is required"
+        });
+    }
+
+    try {
+        const result = await initializeBusiness(
+            businessId,
+            req.user.id
+        );
 
         res.json({
             success: true,
-            initialized: alreadyInstalled || String(data.resultCd) === "000",
-            kra: data
+            initialized: result.initialized,
+            kra: result.kra
         });
     } catch (error) {
+        if (error.status === 400) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+
         res.status(502).json({
             success: false,
             message: "KRA request failed",
@@ -107,22 +130,22 @@ async function initialize(req, res) {
     }
 }
 
-async function getPurchaseState(businessId) {
+async function getSyncState(businessId, syncType) {
     const result = await pool.query(
         `SELECT last_req_dt
          FROM sync_state
          WHERE business_id = $1
-         AND sync_type = 'purchases'`,
-        [businessId]
+         AND sync_type = $2`,
+        [businessId, syncType]
     );
 
     if (!result.rows.length) {
         await pool.query(
             `INSERT INTO sync_state
                 (business_id, sync_type, last_req_dt)
-             VALUES ($1, 'purchases', '20000101000000')
+             VALUES ($1, $2, '20000101000000')
              ON CONFLICT DO NOTHING`,
-            [businessId]
+            [businessId, syncType]
         );
 
         return "20000101000000";
@@ -131,15 +154,23 @@ async function getPurchaseState(businessId) {
     return result.rows[0].last_req_dt;
 }
 
-async function updatePurchaseState(businessId, lastReqDt) {
+async function updateSyncState(businessId, syncType, lastReqDt) {
     await pool.query(
         `UPDATE sync_state
          SET last_req_dt = $1,
              updated_at = CURRENT_TIMESTAMP
          WHERE business_id = $2
-         AND sync_type = 'purchases'`,
-        [lastReqDt, businessId]
+         AND sync_type = $3`,
+        [lastReqDt, businessId, syncType]
     );
+}
+
+async function getPurchaseState(businessId) {
+    return getSyncState(businessId, "purchases");
+}
+
+async function updatePurchaseState(businessId, lastReqDt) {
+    return updateSyncState(businessId, "purchases", lastReqDt);
 }
 
 function extractPurchases(data) {
@@ -216,6 +247,8 @@ async function purchases(req, res) {
         await getPurchaseState(businessId);
 
     const body = {
+        tin: business.kra_pin,
+        bhfId: business.branch_id,
         lastReqDt
     };
 
@@ -247,6 +280,16 @@ async function purchases(req, res) {
             );
         }
 
+        // Re-run matching after every sync, whether or not new
+        // purchase records came in - a payment captured since the
+        // last sync may now be able to match against a purchase
+        // that was already pulled.
+        const transactionController =
+            require("../controllers/transactionController");
+
+        const matchResult =
+            await transactionController.runMatching(businessId);
+
         res.json({
             success: true,
             resultCd: data.resultCd,
@@ -254,12 +297,259 @@ async function purchases(req, res) {
             resultDt: data.resultDt,
             lastReqDt,
             count: records.length,
-            purchases: records
+            purchases: records,
+            matched: matchResult.matched
         });
     } catch (error) {
         res.status(502).json({
             success: false,
             message: "KRA purchase request failed",
+            error: error.response?.data || error.message
+        });
+    }
+}
+
+async function saveBranches(businessId, records) {
+    for (const record of records) {
+        const branchId = record.bhfId;
+
+        if (!branchId) {
+            continue;
+        }
+
+        const addressParts = [
+            record.locDesc,
+            record.sctrNm,
+            record.dstrtNm,
+            record.prvncNm
+        ].filter(Boolean);
+
+        await pool.query(
+            `INSERT INTO branches
+                (
+                    business_id,
+                    branch_id,
+                    branch_name,
+                    address,
+                    phone,
+                    email,
+                    is_main
+                )
+             VALUES
+                ($1,$2,$3,$4,$5,$6,$7)
+             ON CONFLICT (business_id, branch_id)
+             DO UPDATE SET
+                branch_name = EXCLUDED.branch_name,
+                address = EXCLUDED.address,
+                phone = EXCLUDED.phone,
+                email = EXCLUDED.email,
+                is_main = EXCLUDED.is_main`,
+            [
+                businessId,
+                branchId,
+                record.bhfNm || `Branch ${branchId}`,
+                addressParts.join(", ") || null,
+                record.mgrTelNo || null,
+                record.mgrEmail || null,
+                record.hqYn === "Y"
+            ]
+        );
+    }
+}
+
+async function branches(req, res) {
+    const businessId = req.body.businessId;
+
+    if (!businessId) {
+        return res.status(400).json({
+            success: false,
+            message: "businessId is required"
+        });
+    }
+
+    const business = await getBusinessCredentials(
+        businessId,
+        req.user.id
+    );
+
+    if (!business.cmc_key) {
+        return res.status(400).json({
+            success: false,
+            message: "CMC key is not configured for this business"
+        });
+    }
+
+    const lastReqDt =
+        req.body.lastReqDt ||
+        await getSyncState(businessId, "branches");
+
+    const body = {
+        tin: business.kra_pin,
+        bhfId: business.branch_id,
+        lastReqDt
+    };
+
+    try {
+        const data = await postKRA(
+            "selectBhfList",
+            business,
+            body
+        );
+
+        const records =
+            (data.data && Array.isArray(data.data.bhfList)) ?
+                data.data.bhfList :
+                [];
+
+        if (records.length > 0) {
+            const latest = findLatestRequestDate(
+                records,
+                lastReqDt
+            );
+
+            if (latest !== lastReqDt) {
+                await updateSyncState(
+                    businessId,
+                    "branches",
+                    latest
+                );
+            }
+
+            await saveBranches(businessId, records);
+        }
+
+        res.json({
+            success: true,
+            resultCd: data.resultCd,
+            resultMsg: data.resultMsg,
+            resultDt: data.resultDt,
+            lastReqDt,
+            count: records.length,
+            branches: records
+        });
+    } catch (error) {
+        res.status(502).json({
+            success: false,
+            message: "KRA branch request failed",
+            error: error.response?.data || error.message
+        });
+    }
+}
+
+async function saveItems(businessId, records) {
+    for (const record of records) {
+        const itemCode = record.itemCd;
+
+        if (!itemCode) {
+            continue;
+        }
+
+        await pool.query(
+            `INSERT INTO items
+                (
+                    business_id,
+                    item_code,
+                    item_name,
+                    description,
+                    unit_price,
+                    tax_rate,
+                    unit
+                )
+             VALUES
+                ($1,$2,$3,$4,$5,$6,$7)
+             ON CONFLICT (business_id, item_code)
+             DO UPDATE SET
+                item_name = EXCLUDED.item_name,
+                description = EXCLUDED.description,
+                unit_price = EXCLUDED.unit_price,
+                unit = EXCLUDED.unit`,
+            [
+                businessId,
+                itemCode,
+                record.itemNm || itemCode,
+                record.itemStdNm || null,
+                Number(record.dftPrc || 0) || 0,
+                0,
+                record.qtyUnitCd || null
+            ]
+        );
+    }
+}
+
+async function items(req, res) {
+    const businessId = req.body.businessId;
+
+    if (!businessId) {
+        return res.status(400).json({
+            success: false,
+            message: "businessId is required"
+        });
+    }
+
+    const business = await getBusinessCredentials(
+        businessId,
+        req.user.id
+    );
+
+    if (!business.cmc_key) {
+        return res.status(400).json({
+            success: false,
+            message: "CMC key is not configured for this business"
+        });
+    }
+
+    const lastReqDt =
+        req.body.lastReqDt ||
+        await getSyncState(businessId, "items");
+
+    const body = {
+        tin: business.kra_pin,
+        bhfId: business.branch_id,
+        lastReqDt
+    };
+
+    try {
+        const data = await postKRA(
+            "selectItemList",
+            business,
+            body
+        );
+
+        const records =
+            (data.data && Array.isArray(data.data.itemList)) ?
+                data.data.itemList :
+                [];
+
+        if (records.length > 0) {
+            const latest = findLatestRequestDate(
+                records,
+                lastReqDt
+            );
+
+            if (latest !== lastReqDt) {
+                await updateSyncState(
+                    businessId,
+                    "items",
+                    latest
+                );
+            }
+
+            await saveItems(businessId, records);
+        }
+
+        res.json({
+            success: true,
+            resultCd: data.resultCd,
+            resultMsg: data.resultMsg,
+            resultDt: data.resultDt,
+            lastReqDt,
+            count: records.length,
+            items: records
+        });
+    } catch (error) {
+        res.status(502).json({
+            success: false,
+            message: "KRA item request failed",
             error: error.response?.data || error.message
         });
     }
@@ -295,6 +585,7 @@ async function savePurchases(businessId, records) {
 
         const tax =
             Number(
+                record.totTaxAmt ??
                 record.taxAmt ??
                 record.taxAmount ??
                 0
@@ -302,6 +593,7 @@ async function savePurchases(businessId, records) {
 
         const taxable =
             Number(
+                record.totTaxblAmt ??
                 record.taxblAmt ??
                 record.taxableAmount ??
                 0
@@ -401,7 +693,10 @@ async function status(req, res) {
 
 module.exports = {
     initialize,
+    initializeBusiness,
     purchases,
+    branches,
+    items,
     getStoredPurchases,
     status
 };

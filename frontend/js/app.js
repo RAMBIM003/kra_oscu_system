@@ -398,6 +398,58 @@
         }
 
 
+        const createMpesa =
+            document.getElementById(
+                "open-create-mpesa"
+            );
+
+        if (createMpesa) {
+
+            createMpesa.addEventListener(
+                "click",
+                () => {
+
+                    const urlEl =
+                        document.getElementById(
+                            "mpesa-webhook-url"
+                        );
+
+                    if (urlEl) {
+
+                        urlEl.textContent =
+                            `POST ${window.location.origin}/api/payments/webhook`;
+
+                    }
+
+                    const idEl =
+                        document.getElementById(
+                            "mpesa-business-id"
+                        );
+
+                    if (idEl) {
+
+                        const businesses =
+                            document.querySelectorAll(
+                                "#businesses-list .business-card"
+                            );
+
+                        idEl.textContent =
+                            businesses.length ?
+                                "<your business id>" :
+                                "<add a business first>";
+
+                    }
+
+                    this.openModal(
+                        "mpesa-modal"
+                    );
+
+                }
+            );
+
+        }
+
+
         const form =
             document.getElementById(
                 "business-form"
@@ -516,16 +568,96 @@
          * Dashboard
          */
 
+        const globalSearch =
+            document.getElementById("global-search");
+
+        if (globalSearch) {
+
+            globalSearch.addEventListener("input", () => {
+
+                const dashboardSearch =
+                    document.getElementById(
+                        "recent-purchases-search"
+                    );
+
+                if (dashboardSearch) {
+                    dashboardSearch.value = globalSearch.value;
+                    dashboardSearch.dispatchEvent(
+                        new Event("input")
+                    );
+                }
+
+            });
+
+        }
+
+
         const refresh =
             document.getElementById(
-                "dashboard-refresh"
+                "refresh-dashboard-btn"
             );
 
         if (refresh) {
 
             refresh.addEventListener(
                 "click",
-                () => Dashboard.load()
+                async () => {
+
+                    refresh.disabled = true;
+
+                    const icon = refresh.querySelector("i");
+                    if (icon) icon.classList.add("ph-spin");
+
+                    await Dashboard.load();
+
+                    if (window.Toast) {
+                        Toast.success("Dashboard refreshed");
+                    }
+
+                    refresh.disabled = false;
+                    if (icon) icon.classList.remove("ph-spin");
+
+                }
+            );
+
+        }
+
+
+        const topbarRefresh =
+            document.getElementById(
+                "topbar-refresh-btn"
+            );
+
+        if (topbarRefresh) {
+
+            topbarRefresh.addEventListener(
+                "click",
+                () => {
+                    if (refresh) {
+                        refresh.click();
+                    } else {
+                        Dashboard.load();
+                    }
+                }
+            );
+
+        }
+
+
+        const notificationsBtn =
+            document.getElementById(
+                "notifications-btn"
+            );
+
+        if (notificationsBtn) {
+
+            notificationsBtn.addEventListener(
+                "click",
+                () => {
+                    if (window.Toast) {
+                        Toast.info("No new notifications");
+                    }
+                }
             );
 
         }
@@ -545,6 +677,171 @@
             syncPurchases.addEventListener(
                 "click",
                 () => Purchases.sync()
+            );
+
+        }
+
+
+        const syncItemsBtn =
+            document.getElementById(
+                "sync-items-btn"
+            );
+
+        if (syncItemsBtn) {
+
+            syncItemsBtn.addEventListener(
+                "click",
+                async () => {
+
+                    const status =
+                        document.getElementById(
+                            "item-status"
+                        );
+
+                    syncItemsBtn.disabled = true;
+
+                    if (status) {
+                        status.classList.remove("hidden");
+                        status.textContent =
+                            "Connecting to KRA eTIMS...";
+                    }
+
+                    try {
+
+                        const result = await Items.sync();
+
+                        if (status) {
+                            status.textContent =
+                                `Synchronization complete. ${result.count} item(s) received.`;
+                        }
+
+                        await Items.render();
+
+                    } catch (error) {
+
+                        if (status) {
+                            status.textContent =
+                                `Sync failed: ${error.message}`;
+                        }
+
+                    } finally {
+
+                        syncItemsBtn.disabled = false;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        const syncBranchesBtn =
+            document.getElementById(
+                "sync-branches-btn"
+            );
+
+        if (syncBranchesBtn) {
+
+            syncBranchesBtn.addEventListener(
+                "click",
+                async () => {
+
+                    const status =
+                        document.getElementById(
+                            "branch-status"
+                        );
+
+                    syncBranchesBtn.disabled = true;
+
+                    if (status) {
+                        status.classList.remove("hidden");
+                        status.textContent =
+                            "Connecting to KRA eTIMS...";
+                    }
+
+                    try {
+
+                        const response = await fetch(
+                            "/api/branches/sync",
+                            {
+                                method: "POST",
+                                headers: Auth.headers(),
+                                body: JSON.stringify({
+                                    businessId:
+                                        this.currentBusiness.id
+                                })
+                            }
+                        );
+
+                        const data = await response.json();
+
+                        if (!response.ok || !data.success) {
+                            throw new Error(
+                                data.message ||
+                                "Branch synchronization failed"
+                            );
+                        }
+
+                        if (status) {
+                            status.textContent =
+                                `Synchronization complete. ${data.count} branch(es) received.`;
+                        }
+
+                        await this.loadBranches();
+
+                    } catch (error) {
+
+                        if (status) {
+                            status.textContent =
+                                `Sync failed: ${error.message}`;
+                        }
+
+                    } finally {
+
+                        syncBranchesBtn.disabled = false;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /*
+         * Transactions
+         */
+
+        const rematchBtn =
+            document.getElementById(
+                "rematch-btn"
+            );
+
+        if (rematchBtn) {
+
+            rematchBtn.addEventListener(
+                "click",
+                async () => {
+
+                    rematchBtn.disabled = true;
+
+                    try {
+
+                        await Transactions.rematch();
+                        await Transactions.render();
+
+                    } catch (error) {
+
+                        console.error(error);
+
+                    } finally {
+
+                        rematchBtn.disabled = false;
+
+                    }
+
+                }
             );
 
         }
@@ -1148,13 +1445,31 @@
 
 
             container.innerHTML =
-                businesses.map(business => `
+                businesses.map(business => {
+
+                    const env = business.environment || "test";
+
+                    const status = business.status || "pending";
+
+                    const statusLabel = {
+                        connected: "Connected",
+                        pending: "Pending",
+                        error: "Connection error"
+                    }[status] || "Pending";
+
+                    return `
 
                     <div class="business-card">
 
-                        <div class="business-icon">
+                        <div class="business-card-top">
 
-                            <i class="ph ph-buildings"></i>
+                            <div class="business-icon">
+                                <i class="ph ph-buildings"></i>
+                            </div>
+
+                            <span class="badge badge-env-${env}">
+                                ${env === "live" ? "Live" : "Test"}
+                            </span>
 
                         </div>
 
@@ -1167,6 +1482,11 @@
                             ${business.kra_pin || "-"}
                         </p>
 
+                        <span class="badge badge-status-${status}">
+                            <i class="ph ph-circle-fill"></i>
+                            ${statusLabel}
+                        </span>
+
                         <button
                             class="btn btn-primary card-action"
                             onclick="App.selectBusiness(${business.id})"
@@ -1177,7 +1497,9 @@
 
                     </div>
 
-                `).join("");
+                    `;
+
+                }).join("");
 
         } catch (error) {
 
@@ -1378,6 +1700,20 @@
             email.textContent =
                 this.currentUser.email;
 
+            const avatarInitial =
+                document.getElementById(
+                    "sidebar-avatar-initial"
+                );
+
+            if (avatarInitial && this.currentUser.email) {
+
+                avatarInitial.textContent =
+                    this.currentUser.email
+                        .charAt(0)
+                        .toUpperCase();
+
+            }
+
         }
 
     },
@@ -1494,19 +1830,9 @@
                             "business-kra-pin"
                         ).value,
 
-                    branchId:
+                    environment:
                         document.getElementById(
-                            "business-branch-id"
-                        ).value,
-
-                    cmcKey:
-                        document.getElementById(
-                            "business-cmc-key"
-                        ).value,
-
-                    deviceSerial:
-                        document.getElementById(
-                            "business-device-serial"
+                            "business-environment"
                         ).value
 
                 });
@@ -1655,8 +1981,9 @@
             "dashboard",
             "items",
             "purchases",
-            "sales",
-            "branches"
+            "payments",
+            "branches",
+            "transactions"
         ];
 
 
@@ -1756,11 +2083,14 @@
             purchases:
                 "Purchases",
 
-            sales:
-                "Sales",
+            payments:
+                "Payments",
 
             branches:
-                "Branch Information"
+                "Branch Information",
+
+            transactions:
+                "Transactions"
 
         };
 
@@ -1878,10 +2208,10 @@
 
 
         if (
-            page === "sales"
+            page === "payments"
         ) {
 
-            await Sales.load();
+            await Payments.render();
 
         }
 
@@ -1891,6 +2221,15 @@
         ) {
 
             await this.loadBranches();
+
+        }
+
+
+        if (
+            page === "transactions"
+        ) {
+
+            await Transactions.render();
 
         }
 

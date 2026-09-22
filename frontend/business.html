@@ -10,7 +10,10 @@
 
     <title>Businesses - KRA eTIMS</title>
 
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/business.css">
@@ -37,6 +40,12 @@
             </div>
 
         </div>
+
+
+        <div
+            id="theme-toggle-mount"
+            style="margin-left: auto; margin-right: 12px;"
+        ></div>
 
 
         <div class="selection-user">
@@ -75,16 +84,16 @@
             <div>
 
                 <span class="eyebrow">
-                    BUSINESS
+                    BUSINESS &amp; CONNECTIONS
                 </span>
 
                 <h1>
-                    Select a business
+                    Your businesses
                 </h1>
 
                 <p>
-                    Choose the business you want to
-                    manage through the eTIMS platform.
+                    Manage the businesses connected to
+                    KRA eTIMS through this platform.
                 </p>
 
             </div>
@@ -104,6 +113,65 @@
             id="businesses-list"
             class="cards-grid"
         ></div>
+
+
+        <div class="section-divider"></div>
+
+
+        <div class="selection-heading">
+
+            <div>
+
+                <span class="eyebrow">
+                    PAYMENTS
+                </span>
+
+                <h2>
+                    Payment connections
+                </h2>
+
+                <p>
+                    M-Pesa is a payment channel, not a
+                    business - it feeds transactions once
+                    connected.
+                </p>
+
+            </div>
+
+            <button
+                id="open-create-mpesa"
+                class="btn btn-secondary"
+            >
+                <i class="ph ph-plus"></i>
+                Add M-Pesa
+            </button>
+
+        </div>
+
+
+        <div
+            id="mpesa-list"
+            class="cards-grid"
+        >
+
+            <div class="business-card business-card-muted">
+
+                <div class="business-icon">
+                    <i class="ph ph-device-mobile"></i>
+                </div>
+
+                <h3>
+                    M-Pesa not connected
+                </h3>
+
+                <p>
+                    Payment matching will appear here
+                    once M-Pesa integration is available.
+                </p>
+
+            </div>
+
+        </div>
 
     </main>
 
@@ -196,70 +264,35 @@
                     </div>
 
 
-                    <div class="form-group">
-
-                        <label for="business-branch-id">
-                            Branch ID
-                        </label>
-
-                        <div class="input-wrapper">
-
-                            <i class="ph ph-git-branch input-icon"></i>
-
-                            <input
-                                type="text"
-                                id="business-branch-id"
-                                placeholder="Branch ID"
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="business-device-serial">
-                            Device Serial
-                        </label>
-
-                        <div class="input-wrapper">
-
-                            <i class="ph ph-device-mobile input-icon"></i>
-
-                            <input
-                                type="text"
-                                id="business-device-serial"
-                                placeholder="Device serial number"
-                            >
-
-                        </div>
-
-                    </div>
-
-
                     <div class="form-group form-grid-full">
 
-                        <label for="business-cmc-key">
-                            CMC Key
+                        <label for="business-environment">
+                            Environment
                         </label>
 
-                        <div class="input-wrapper">
+                        <div class="select-wrapper">
 
-                            <i class="ph ph-key input-icon"></i>
+                            <i class="ph ph-toggle-left"></i>
 
-                            <input
-                                type="password"
-                                id="business-cmc-key"
-                                placeholder="Enter CMC key"
+                            <select
+                                id="business-environment"
                                 required
                             >
+                                <option value="test" selected>
+                                    Test
+                                </option>
+                                <option value="live">
+                                    Live
+                                </option>
+                            </select>
 
                         </div>
 
                         <small class="field-help">
-                            Your CMC key is used for the secure
-                            KRA eTIMS integration.
+                            Technical KRA credentials (branch,
+                            device, CMC key) are configured
+                            securely on the server and are not
+                            entered here.
                         </small>
 
                     </div>
@@ -302,13 +335,138 @@
 </div>
 
 
+<div
+    id="mpesa-modal"
+    class="modal hidden"
+>
+
+    <div class="modal-dialog modal-dialog-large">
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    PAYMENTS
+                </span>
+
+                <h2>
+                    Connect M-Pesa
+                </h2>
+
+                <p>
+                    Forward payment confirmation SMS
+                    into this platform.
+                </p>
+
+            </div>
+
+            <button
+                class="close-modal icon-btn"
+                data-modal="mpesa-modal"
+                type="button"
+            >
+                <i class="ph ph-x"></i>
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <p class="setup-note">
+                M-Pesa has no API for payments you
+                <strong>send out</strong>, so outgoing
+                payments are captured from the
+                confirmation SMS instead. Install an
+                SMS-forwarding app on the phone that
+                receives M-Pesa messages and point it
+                at the endpoint below.
+            </p>
+
+
+            <div class="form-group">
+
+                <label>
+                    Webhook URL
+                </label>
+
+                <div class="setup-code" id="mpesa-webhook-url">
+                    POST http://localhost:5000/api/payments/webhook
+                </div>
+
+                <small class="field-help">
+                    Replace localhost with your server's
+                    public address once deployed - a phone
+                    cannot reach localhost.
+                </small>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Required headers
+                </label>
+
+                <div class="setup-code">
+                    Content-Type: application/json<br>
+                    x-webhook-secret: &lt;SMS_WEBHOOK_SECRET from .env&gt;
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Request body
+                </label>
+
+                <div class="setup-code">
+                    {<br>
+                    &nbsp;&nbsp;"businessId": <span id="mpesa-business-id">&lt;business id&gt;</span>,<br>
+                    &nbsp;&nbsp;"message": "&lt;raw M-Pesa SMS text&gt;"<br>
+                    }
+                </div>
+
+                <small class="field-help">
+                    The platform parses the receipt number,
+                    amount, recipient and time from the raw
+                    SMS text automatically.
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="btn btn-secondary close-modal"
+                data-modal="mpesa-modal"
+            >
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="/js/theme.js"></script>
+<script src="/js/toast.js"></script>
 <script src="/js/auth.js"></script>
 <script src="/js/profiles.js"></script>
 <script src="/js/business.js"></script>
 <script src="/js/dashboard.js"></script>
 <script src="/js/items.js"></script>
 <script src="/js/purchases.js"></script>
-<script src="/js/sales.js"></script>
 <script src="/js/app.js"></script>
 
 </body>

@@ -10,7 +10,10 @@
 
     <title>KRA eTIMS Management Platform</title>
 
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/app.css">
@@ -59,7 +62,11 @@
                         —
                     </strong>
 
-                    <span>
+                    <span
+                        class="status-dot-row"
+                        id="sidebar-business-status"
+                    >
+                        <span class="status-dot status-dot-connected"></span>
                         Connected
                     </span>
 
@@ -110,10 +117,10 @@
 
             <button
                 class="nav-item"
-                data-page="sales"
+                data-page="payments"
             >
-                <i class="ph ph-arrow-up-right"></i>
-                <span>Sales</span>
+                <i class="ph ph-device-mobile"></i>
+                <span>Payments</span>
             </button>
 
             <button
@@ -124,6 +131,14 @@
                 <span>Branches</span>
             </button>
 
+            <button
+                class="nav-item"
+                data-page="transactions"
+            >
+                <i class="ph ph-arrows-left-right"></i>
+                <span>Transactions</span>
+            </button>
+
         </nav>
 
 
@@ -132,7 +147,7 @@
             <div class="sidebar-user">
 
                 <div class="sidebar-user-avatar">
-                    <i class="ph ph-user"></i>
+                    <span id="sidebar-avatar-initial">U</span>
                 </div>
 
                 <div class="sidebar-user-details">
@@ -167,46 +182,64 @@
 
         <header class="topbar">
 
-            <div class="topbar-heading">
+            <div class="topbar-search topbar-search-wide">
 
-                <span class="eyebrow">
-                    KRA ETIMS
-                </span>
+                <i class="ph ph-magnifying-glass"></i>
 
-                <h1 id="page-title">
-                    Dashboard
-                </h1>
+                <input
+                    type="text"
+                    id="global-search"
+                    placeholder="Search anything... (invoice, item, supplier)"
+                >
 
             </div>
 
 
-            <div class="topbar-context">
+            <div class="topbar-actions topbar-actions-grouped">
 
-                <div class="context-item">
+                <div id="theme-toggle-mount"></div>
 
-                    <i class="ph ph-user-circle"></i>
+                <button
+                    class="icon-btn topbar-icon-btn"
+                    id="notifications-btn"
+                    title="Notifications"
+                >
+                    <i class="ph ph-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
 
-                    <span id="current-profile-name">
-                        —
-                    </span>
+                <button
+                    class="icon-btn topbar-icon-btn"
+                    id="topbar-refresh-btn"
+                    title="Refresh"
+                >
+                    <i class="ph ph-arrows-clockwise"></i>
+                </button>
 
-                </div>
+                <div class="topbar-datetime">
 
-                <div class="context-divider"></div>
-
-                <div class="context-item">
-
-                    <i class="ph ph-buildings"></i>
-
-                    <span id="current-business-name">
-                        —
-                    </span>
+                    <div id="topbar-date">—</div>
+                    <div id="topbar-time">—</div>
 
                 </div>
 
             </div>
 
         </header>
+
+
+        <div class="page-heading-row">
+
+            <span class="eyebrow">
+                KRA ETIMS
+            </span>
+
+            <h1 id="page-title">
+                Dashboard
+            </h1>
+
+        </div>
+
 
 
         <div class="app-page-content">
@@ -221,19 +254,19 @@
                     <div>
 
                         <h2>
-                            Business overview
+                            Business Overview
                         </h2>
 
                         <p>
-                            Monitor purchases, sales,
+                            Monitor purchases, payments,
                             inventory and eTIMS activity.
                         </p>
 
                     </div>
 
                     <button
-                        id="dashboard-refresh"
-                        class="btn btn-secondary"
+                        id="refresh-dashboard-btn"
+                        class="btn btn-dark"
                     >
                         <i class="ph ph-arrows-clockwise"></i>
                         Refresh
@@ -242,7 +275,7 @@
                 </div>
 
 
-                <div class="stats-grid">
+                <div class="stats-grid dashboard-stats-grid">
 
                     <div class="stat-card stat-card-purchases">
 
@@ -252,23 +285,28 @@
                                 <i class="ph ph-shopping-cart"></i>
                             </div>
 
-                            <span class="stat-trend">
-                                Purchases
-                            </span>
+                            <i class="ph ph-caret-right stat-chevron"></i>
 
+                        </div>
+
+                        <div class="stat-label-top">
+                            Total Purchases
                         </div>
 
                         <div class="stat-value">
-
-                            <span id="stat-purchases">
-                                0
-                            </span>
-
+                            <span id="stat-purchases">0</span>
                         </div>
 
-                        <div class="stat-label">
-                            Total purchase transactions
+                        <div class="stat-meta">
+                            <span id="stat-purchases-today">0 today</span>
+                            ·
+                            <span id="stat-purchase-sync">not yet synced</span>
                         </div>
+
+                        <div
+                            class="stat-sparkline"
+                            id="sparkline-purchases"
+                        ></div>
 
                     </div>
 
@@ -281,61 +319,134 @@
                                 <i class="ph ph-currency-circle-dollar"></i>
                             </div>
 
-                            <span class="stat-trend">
-                                Value
-                            </span>
+                            <i class="ph ph-caret-right stat-chevron"></i>
 
+                        </div>
+
+                        <div class="stat-label-top">
+                            Purchase Value
                         </div>
 
                         <div class="stat-value">
-
-                            <span>
-                                KES
-                            </span>
-
-                            <span id="stat-purchase-amount">
-                                0
-                            </span>
-
+                            <span id="stat-purchase-amount">KES 0</span>
                         </div>
 
-                        <div class="stat-label">
+                        <div class="stat-trend-row" id="stat-purchase-trend">
+                            <i class="ph ph-arrow-up"></i>
+                            <span id="stat-purchase-trend-pct">0%</span>
+                            <span class="stat-trend-label">vs last month</span>
+                        </div>
+
+                        <div class="stat-meta">
                             Total purchase amount
                         </div>
 
                     </div>
 
 
-                    <div class="stat-card stat-card-sales">
+                    <div class="stat-card stat-card-payments">
 
                         <div class="stat-card-top">
 
                             <div class="stat-icon">
-                                <i class="ph ph-receipt"></i>
+                                <i class="ph ph-device-mobile"></i>
                             </div>
 
-                            <span class="stat-trend">
-                                Sales
+                            <span
+                                class="status-dot-row"
+                                id="stat-payments-status"
+                            >
+                                <span class="status-dot status-dot-pending"></span>
+                                Awaiting data
                             </span>
 
+                        </div>
+
+                        <div class="stat-label-top">
+                            M-Pesa Payments
                         </div>
 
                         <div class="stat-value">
+                            <span id="stat-payments">0</span>
+                        </div>
 
-                            <span id="stat-sales">
-                                0
-                            </span>
+                        <div class="stat-trend-row" id="stat-payments-trend">
+                            <i class="ph ph-arrow-up"></i>
+                            <span id="stat-payments-trend-pct">0%</span>
+                            <span class="stat-trend-label">vs last month</span>
+                        </div>
+
+                        <div class="stat-meta">
+                            <span id="stat-payments-total">KES 0</span>
+                            captured
+                        </div>
+
+                        <div
+                            class="stat-sparkline"
+                            id="sparkline-payments"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="stat-card stat-card-transactions">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon">
+                                <i class="ph ph-arrows-left-right"></i>
+                            </div>
+
+                            <i class="ph ph-caret-right stat-chevron"></i>
 
                         </div>
 
-                        <div class="stat-label">
-                            Total sales transactions
+                        <div class="stat-label-top">
+                            KRA Transactions
+                        </div>
+
+                        <div class="stat-value">
+                            <span id="stat-transactions">0</span>
+                        </div>
+
+                        <div
+                            class="stat-meta"
+                            id="stat-transactions-label"
+                        >
+                            0 matched · 0 unmatched
                         </div>
 
                     </div>
 
 
-                    <div class="stat-card stat-card-items">
+                    <div class="stat-card stat-card-branches">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon">
+                                <i class="ph ph-buildings"></i>
+                            </div>
+
+                            <i class="ph ph-caret-right stat-chevron"></i>
+
+                        </div>
+
+                        <div class="stat-label-top">
+                            Branches
+                        </div>
+
+                        <div class="stat-value">
+                            <span id="stat-branches">0</span>
+                        </div>
+
+                        <div class="stat-meta">
+                            Registered with KRA
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card stat-card-inventory">
 
                         <div class="stat-card-top">
 
@@ -343,21 +454,19 @@
                                 <i class="ph ph-package"></i>
                             </div>
 
-                            <span class="stat-trend">
-                                Inventory
-                            </span>
+                            <i class="ph ph-caret-right stat-chevron"></i>
 
+                        </div>
+
+                        <div class="stat-label-top">
+                            Inventory
                         </div>
 
                         <div class="stat-value">
-
-                            <span id="stat-items">
-                                0
-                            </span>
-
+                            <span id="stat-items">0</span>
                         </div>
 
-                        <div class="stat-label">
+                        <div class="stat-meta">
                             Registered business items
                         </div>
 
@@ -366,63 +475,384 @@
                 </div>
 
 
-                <div class="dashboard-grid">
+                <div class="dashboard-mid-grid">
 
                     <div class="panel chart-panel">
 
-                        <div class="panel-header">
+                        <div class="chart-panel-header">
 
                             <div>
 
-                                <h3>
-                                    Purchase activity
-                                </h3>
-
-                                <p>
-                                    Monthly purchase trend
-                                </p>
+                                <h3>Purchase Activity</h3>
+                                <p id="chart-subtitle">Daily purchase trend - last 30 days</p>
 
                             </div>
 
-                            <div class="panel-icon">
-                                <i class="ph ph-chart-line-up"></i>
+                            <div class="chart-period-toggle" id="chart-period-toggle">
+
+                                <button
+                                    type="button"
+                                    class="chart-period-btn"
+                                    data-period="7d"
+                                >7D</button>
+
+                                <button
+                                    type="button"
+                                    class="chart-period-btn active"
+                                    data-period="30d"
+                                >30D</button>
+
+                                <button
+                                    type="button"
+                                    class="chart-period-btn"
+                                    data-period="12m"
+                                >12M</button>
+
                             </div>
 
                         </div>
 
-                        <div
-                            id="monthly-chart"
-                            class="chart-container"
-                        ></div>
+                        <div class="chart-panel-value">
+                            <span id="chart-total-value">KES 0</span>
+                            <span
+                                class="stat-trend-row"
+                                id="chart-trend"
+                                style="display:inline-flex;"
+                            >
+                                <i class="ph ph-arrow-up"></i>
+                                <span id="chart-trend-pct">0%</span>
+                            </span>
+                        </div>
+
+                        <div class="chart-legend">
+                            <span class="chart-legend-item">
+                                <span class="chart-legend-dot chart-legend-current"></span>
+                                This period
+                            </span>
+                            <span
+                                class="chart-legend-item"
+                                id="chart-legend-previous"
+                            >
+                                <span class="chart-legend-dot chart-legend-previous"></span>
+                                Previous period
+                            </span>
+                        </div>
+
+                        <div id="purchase-chart" class="purchase-chart">
+                        </div>
 
                     </div>
 
 
-                    <div class="panel">
+                    <div class="panel status-panel">
 
-                        <div class="panel-header">
+                        <div class="panel-simple-header">
+                            <h3>Connection Status</h3>
+                        </div>
 
-                            <div>
+                        <div class="connection-row">
 
-                                <h3>
-                                    Recent purchases
-                                </h3>
+                            <div class="connection-row-icon">
+                                <i class="ph ph-shield-check"></i>
+                            </div>
 
-                                <p>
-                                    Latest transaction activity
-                                </p>
+                            <div class="connection-row-text">
+
+                                <strong>KRA eTIMS</strong>
+
+                                <span
+                                    class="status-dot-row"
+                                    id="connection-kra-status"
+                                >
+                                    <span class="status-dot status-dot-pending"></span>
+                                    Checking...
+                                </span>
 
                             </div>
 
-                            <div class="panel-icon">
-                                <i class="ph ph-clock-counter-clockwise"></i>
+                            <div
+                                class="connection-row-meta"
+                                id="connection-kra-meta"
+                            >
+                                -
                             </div>
 
                         </div>
 
+                        <div class="connection-row">
+
+                            <div class="connection-row-icon">
+                                <i class="ph ph-device-mobile"></i>
+                            </div>
+
+                            <div class="connection-row-text">
+
+                                <strong>M-Pesa</strong>
+
+                                <span
+                                    class="status-dot-row"
+                                    id="connection-mpesa-status"
+                                >
+                                    <span class="status-dot status-dot-pending"></span>
+                                    Checking...
+                                </span>
+
+                            </div>
+
+                            <div
+                                class="connection-row-meta"
+                                id="connection-mpesa-meta"
+                            >
+                                -
+                            </div>
+
+                        </div>
+
+                        <div class="connection-row">
+
+                            <div class="connection-row-icon">
+                                <i class="ph ph-database"></i>
+                            </div>
+
+                            <div class="connection-row-text">
+
+                                <strong>Database</strong>
+
+                                <span class="status-dot-row">
+                                    <span class="status-dot status-dot-healthy"></span>
+                                    Healthy
+                                </span>
+
+                            </div>
+
+                            <div class="connection-row-meta">
+                                -
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel pipeline-panel">
+
+                    <div class="panel-simple-header">
+                        <h3>Today's Activity</h3>
+                        <p>Business flow from purchase to reconciliation</p>
+                    </div>
+
+                    <div class="activity-pipeline" id="activity-pipeline">
+
+                        <div class="pipeline-step">
+                            <div class="pipeline-icon pipeline-icon-purchases">
+                                <i class="ph ph-shopping-cart"></i>
+                            </div>
+                            <div class="pipeline-value" id="pipeline-purchases">0</div>
+                            <div class="pipeline-label">Purchases</div>
+                        </div>
+
+                        <i class="ph ph-arrow-right pipeline-arrow"></i>
+
+                        <div class="pipeline-step">
+                            <div class="pipeline-icon pipeline-icon-payments">
+                                <i class="ph ph-device-mobile"></i>
+                            </div>
+                            <div class="pipeline-value" id="pipeline-payments">0</div>
+                            <div class="pipeline-label">M-Pesa Payments</div>
+                        </div>
+
+                        <i class="ph ph-arrow-right pipeline-arrow"></i>
+
+                        <div class="pipeline-step">
+                            <div class="pipeline-icon pipeline-icon-matched">
+                                <i class="ph ph-check-circle"></i>
+                            </div>
+                            <div class="pipeline-value" id="pipeline-matched">0</div>
+                            <div class="pipeline-label">Matched</div>
+                        </div>
+
+                        <i class="ph ph-arrow-right pipeline-arrow"></i>
+
+                        <div class="pipeline-step">
+                            <div class="pipeline-icon pipeline-icon-pending">
+                                <i class="ph ph-clock-countdown"></i>
+                            </div>
+                            <div class="pipeline-value" id="pipeline-unmatched">0</div>
+                            <div class="pipeline-label">Unmatched</div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-viz-row">
+
+                    <div class="panel donut-panel">
+
+                        <div class="panel-simple-header">
+                            <h3>Matched vs Unmatched</h3>
+                            <p>Reconciliation proportion</p>
+                        </div>
+
+                        <div class="donut-wrap">
+
+                            <svg
+                                viewBox="0 0 120 120"
+                                class="donut-svg"
+                                id="donut-chart"
+                            >
+                                <circle
+                                    cx="60" cy="60" r="50"
+                                    class="donut-track"
+                                ></circle>
+                                <circle
+                                    cx="60" cy="60" r="50"
+                                    class="donut-progress"
+                                    id="donut-progress"
+                                ></circle>
+                            </svg>
+
+                            <div class="donut-center">
+                                <strong id="donut-pct">0%</strong>
+                                <span>Matched</span>
+                            </div>
+
+                        </div>
+
+                        <div class="donut-legend">
+
+                            <span class="donut-legend-item">
+                                <span class="donut-dot donut-dot-matched"></span>
+                                Matched
+                                <strong id="donut-matched-count">0</strong>
+                            </span>
+
+                            <span class="donut-legend-item">
+                                <span class="donut-dot donut-dot-unmatched"></span>
+                                Unmatched
+                                <strong id="donut-unmatched-count">0</strong>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel suppliers-panel">
+
+                        <div class="panel-simple-header">
+                            <h3>Top Suppliers</h3>
+                            <p>By total purchase value</p>
+                        </div>
+
+                        <div id="suppliers-bar-chart" class="suppliers-bar-chart">
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel ticker-panel">
+
+                    <div class="table-header">
+
+                        <div>
+                            <h3>Recent Activity</h3>
+                            <p>Live records across your business</p>
+                        </div>
+
+                        <div class="activity-panel-actions">
+
+                            <div class="table-header-search">
+
+                                <i class="ph ph-magnifying-glass"></i>
+
+                                <input
+                                    type="text"
+                                    id="activity-search"
+                                    placeholder="Search..."
+                                >
+
+                            </div>
+
+                            <button
+                                class="icon-btn header-action-btn"
+                                id="activity-chart-toggle"
+                                title="Chart view"
+                            >
+                                <i class="ph ph-chart-bar"></i>
+                            </button>
+
+                            <button
+                                class="icon-btn header-action-btn"
+                                id="activity-download-btn"
+                                title="Download as CSV"
+                            >
+                                <i class="ph ph-download-simple"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity-tabs" id="activity-tabs">
+
+                        <button
+                            type="button"
+                            class="activity-tab active"
+                            data-entity="purchases"
+                        >Purchases</button>
+
+                        <button
+                            type="button"
+                            class="activity-tab"
+                            data-entity="items"
+                        >Items</button>
+
+                        <button
+                            type="button"
+                            class="activity-tab"
+                            data-entity="branches"
+                        >Branches</button>
+
+                        <button
+                            type="button"
+                            class="activity-tab"
+                            data-entity="payments"
+                        >Payments</button>
+
+                        <button
+                            type="button"
+                            class="activity-tab"
+                            data-entity="transactions"
+                        >Transactions</button>
+
+                    </div>
+
+
+                    <div
+                        class="ticker-wrapper"
+                        id="ticker-wrapper"
+                    >
+
+                        <table class="data-table ticker-table" id="activity-table">
+
+                            <thead id="activity-table-head">
+                            </thead>
+
+                            <tbody id="activity-table-body">
+                            </tbody>
+
+                        </table>
+
                         <div
-                            id="recent-purchases"
-                            class="recent-list"
+                            id="activity-chart-view"
+                            class="activity-chart-view hidden"
                         ></div>
 
                     </div>
@@ -452,15 +882,33 @@
 
                     </div>
 
-                    <button
-                        id="add-item-btn"
-                        class="btn btn-primary"
-                    >
-                        <i class="ph ph-plus"></i>
-                        Add Item
-                    </button>
+                    <div class="page-toolbar-actions">
+
+                        <button
+                            id="sync-items-btn"
+                            class="btn btn-secondary"
+                        >
+                            <i class="ph ph-arrows-clockwise"></i>
+                            Sync Items
+                        </button>
+
+                        <button
+                            id="add-item-btn"
+                            class="btn btn-primary"
+                        >
+                            <i class="ph ph-plus"></i>
+                            Add Item
+                        </button>
+
+                    </div>
 
                 </div>
+
+
+                <div
+                    id="item-status"
+                    class="status-message hidden"
+                ></div>
 
 
                 <div class="panel table-panel">
@@ -479,16 +927,24 @@
 
                         </div>
 
-                        <div class="table-header-icon">
-                            <i class="ph ph-package"></i>
+                        <div class="table-header-search">
+
+                            <i class="ph ph-magnifying-glass"></i>
+
+                            <input
+                                type="text"
+                                id="items-search"
+                                placeholder="Search item code or name..."
+                            >
+
                         </div>
 
                     </div>
 
-                    <div class="table-wrapper">
+                    <div class="table-wrapper ticker-wrapper" id="items-ticker-wrapper">
 
                         <table
-                            class="data-table"
+                            class="data-table ticker-table"
                             id="items-table"
                         >
 
@@ -504,7 +960,7 @@
 
                             </thead>
 
-                            <tbody>
+                            <tbody id="items-table-body">
                             </tbody>
 
                         </table>
@@ -569,16 +1025,24 @@
 
                         </div>
 
-                        <div class="table-header-icon">
-                            <i class="ph ph-shopping-cart"></i>
+                        <div class="table-header-search">
+
+                            <i class="ph ph-magnifying-glass"></i>
+
+                            <input
+                                type="text"
+                                id="purchases-search"
+                                placeholder="Search invoice or supplier..."
+                            >
+
                         </div>
 
                     </div>
 
-                    <div class="table-wrapper">
+                    <div class="table-wrapper ticker-wrapper" id="purchases-ticker-wrapper">
 
                         <table
-                            class="data-table"
+                            class="data-table ticker-table"
                             id="purchases-table"
                         >
 
@@ -594,7 +1058,7 @@
 
                             </thead>
 
-                            <tbody>
+                            <tbody id="purchases-table-body">
                             </tbody>
 
                         </table>
@@ -607,7 +1071,7 @@
 
 
             <section
-                id="page-sales"
+                id="page-payments"
                 class="app-page hidden"
             >
 
@@ -616,23 +1080,16 @@
                     <div>
 
                         <h2>
-                            Sales
+                            Payments
                         </h2>
 
                         <p>
-                            Record and manage business sales
-                            transactions.
+                            M-Pesa payments Masterclass has
+                            made, captured automatically via
+                            SMS forwarding.
                         </p>
 
                     </div>
-
-                    <button
-                        id="add-sale-btn"
-                        class="btn btn-primary"
-                    >
-                        <i class="ph ph-plus"></i>
-                        Record Sale
-                    </button>
 
                 </div>
 
@@ -644,17 +1101,18 @@
                         <div>
 
                             <h3>
-                                Sales transactions
+                                Captured payments
                             </h3>
 
                             <p>
-                                Business sales activity
+                                Raw payment records, before
+                                matching to a purchase
                             </p>
 
                         </div>
 
                         <div class="table-header-icon">
-                            <i class="ph ph-receipt"></i>
+                            <i class="ph ph-device-mobile"></i>
                         </div>
 
                     </div>
@@ -663,22 +1121,22 @@
 
                         <table
                             class="data-table"
-                            id="sales-table"
+                            id="payments-table-wrapper"
                         >
 
                             <thead>
 
                                 <tr>
-                                    <th>Receipt</th>
-                                    <th>Customer</th>
-                                    <th>Date</th>
+                                    <th>M-Pesa Receipt</th>
+                                    <th>Recipient</th>
                                     <th>Amount</th>
+                                    <th>Time</th>
                                     <th>Status</th>
                                 </tr>
 
                             </thead>
 
-                            <tbody>
+                            <tbody id="payments-table">
                             </tbody>
 
                         </table>
@@ -710,13 +1168,210 @@
 
                     </div>
 
+                    <button
+                        id="sync-branches-btn"
+                        class="btn btn-secondary"
+                    >
+                        <i class="ph ph-arrows-clockwise"></i>
+                        Sync Branches
+                    </button>
+
                 </div>
+
+
+                <div
+                    id="branch-status"
+                    class="status-message hidden"
+                ></div>
 
 
                 <div
                     id="branch-details"
                     class="branch-grid"
                 ></div>
+
+            </section>
+
+
+            <section
+                id="page-transactions"
+                class="app-page hidden"
+            >
+
+                <div class="page-toolbar">
+
+                    <div>
+
+                        <h2>
+                            Transactions
+                        </h2>
+
+                        <p>
+                            KRA purchase records reconciled
+                            against Masterclass's own outgoing
+                            M-Pesa payments.
+                        </p>
+
+                    </div>
+
+                    <button
+                        id="rematch-btn"
+                        class="btn btn-secondary"
+                    >
+                        <i class="ph ph-arrows-clockwise"></i>
+                        Re-match
+                    </button>
+
+                </div>
+
+
+                <div class="stats-grid">
+
+                    <div class="stat-card stat-card-purchases">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon">
+                                <i class="ph ph-list-checks"></i>
+                            </div>
+
+                            <span class="stat-trend">
+                                Total
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value">
+                            <span id="stat-txn-total">0</span>
+                        </div>
+
+                        <div class="stat-label">
+                            Purchases pulled from KRA
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card stat-card-amount">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon">
+                                <i class="ph ph-check-circle"></i>
+                            </div>
+
+                            <span class="stat-trend">
+                                Matched
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value">
+                            <span id="stat-txn-matched">0</span>
+                        </div>
+
+                        <div class="stat-label">
+                            Confirmed paid via M-Pesa
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card stat-card-inventory">
+
+                        <div class="stat-card-top">
+
+                            <div class="stat-icon">
+                                <i class="ph ph-clock-countdown"></i>
+                            </div>
+
+                            <span class="stat-trend">
+                                Unmatched
+                            </span>
+
+                        </div>
+
+                        <div class="stat-value">
+                            <span id="stat-txn-unmatched">0</span>
+                        </div>
+
+                        <div class="stat-label">
+                            Retried on every future sync
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel table-panel">
+
+                    <div class="table-header">
+
+                        <div>
+
+                            <h3>
+                                Purchase &amp; payment reconciliation
+                            </h3>
+
+                            <p>
+                                Amount + date matched - seller
+                                and recipient names shown side
+                                by side, not auto-merged
+                            </p>
+
+                        </div>
+
+                        <div class="table-header-icon">
+                            <i class="ph ph-arrows-left-right"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="table-wrapper">
+
+                        <table
+                            class="data-table"
+                            id="transactions-table"
+                        >
+
+                            <thead>
+
+                                <tr>
+                                    <th>Invoice</th>
+                                    <th>KRA Seller</th>
+                                    <th>Invoice Date</th>
+                                    <th>Taxable Amt</th>
+                                    <th>VAT Amt</th>
+                                    <th>M-Pesa Receipt</th>
+                                    <th>M-Pesa Recipient</th>
+                                    <th>Payment Time</th>
+                                    <th>Status</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="transactions-table-body">
+
+                                <tr>
+                                    <td
+                                        colspan="9"
+                                        class="table-empty-cell"
+                                    >
+                                        No transactions yet. Sync
+                                        Purchases to pull KRA
+                                        records - matching runs
+                                        automatically.
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
 
             </section>
 
@@ -885,13 +1540,17 @@
 </div>
 
 
+<script src="/js/theme.js"></script>
+<script src="/js/toast.js"></script>
 <script src="/js/auth.js"></script>
 <script src="/js/profiles.js"></script>
 <script src="/js/business.js"></script>
 <script src="/js/dashboard.js"></script>
 <script src="/js/items.js"></script>
 <script src="/js/purchases.js"></script>
-<script src="/js/sales.js"></script>
+<script src="/js/payments.js"></script>
+<script src="/js/transactions.js"></script>
+<script src="/js/activity-panel.js"></script>
 <script src="/js/app.js"></script>
 
 </body>

@@ -56,7 +56,7 @@
     async branches(businessId) {
 
         const response = await fetch(
-            `/api/branches?businessId=${encodeURIComponent(businessId)}`,
+            `/api/branches/business/${encodeURIComponent(businessId)}`,
             {
                 headers: Auth.headers()
             }

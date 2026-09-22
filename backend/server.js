@@ -11,6 +11,8 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const itemRoutes = require("./routes/itemRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
 const oscuRoutes = require("./routes/oscuRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
 
 const errorHandler = require("./middleware/errorHandler");
 
@@ -23,7 +25,7 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
         "Access-Control-Allow-Headers",
-        "Content-Type, Authorization, tin, bhfId, cmcKey"
+        "Content-Type, Authorization, tin, bhfId, cmcKey, x-webhook-secret"
     );
     res.setHeader(
         "Access-Control-Allow-Methods",
@@ -53,6 +55,8 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/purchases", purchaseRoutes);
 app.use("/api/oscu", oscuRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/transactions", transactionRoutes);
 
 app.use(express.static(path.join(__dirname, "..", "frontend")));
 

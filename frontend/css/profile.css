@@ -4,12 +4,10 @@
    Original styles are currently preserved in global.css.
    ============================================================ */
 
-/* ---- Header: lighter saturated red (agreed: #ef4444), brand removed, avatar dropdown on the right ---- */
+/* ---- Header: white background (global.css default), brand removed, avatar dropdown on the right ---- */
 
 .selection-header {
     justify-content: flex-end;
-    background: #ef4444;
-    border-bottom: 0;
 }
 
 .user-menu {
@@ -31,25 +29,25 @@
 }
 
 .user-menu-trigger:hover {
-    background: rgba(255, 255, 255, 0.14);
+    background: var(--primary-soft);
 }
 
 .user-menu-trigger .user-avatar {
-    background: #fff;
-    color: #ef4444;
+    background: var(--primary);
+    color: #fff;
     font-weight: 800;
 }
 
 .user-menu-trigger .user-info span {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-muted);
 }
 
 .user-menu-trigger .user-info strong {
-    color: #fff;
+    color: var(--navy);
 }
 
 .user-menu-caret {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-muted);
     font-size: 13px;
 }
 
